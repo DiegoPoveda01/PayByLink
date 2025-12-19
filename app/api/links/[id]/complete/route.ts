@@ -1,26 +1,50 @@
-import { kv } from '@vercel/kv';
 import { NextRequest, NextResponse } from 'next/server';
 import { type StoredPaymentLink } from '@/lib/payment-links';
-
-// Simulador local
-const localStore = new Map<string, StoredPaymentLink>();
+import { supabase } from '@/lib/supabase';
 
 async function getLink(id: string): Promise<StoredPaymentLink | null> {
-  if (process.env.KV_REST_API_URL) {
-    const data = await kv.get<string>(`link:${id}`);
-    return data ? JSON.parse(data) : null;
-  } else {
-    return localStore.get(`link:${id}`) || null;
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from('payment_links')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Supabase get error:', error.message);
+    return null;
   }
+
+  if (!data) return null;
+
+  return {
+    id: data.id,
+    amount: Number(data.amount),
+    currency: data.currency,
+    description: data.description,
+    recipient: data.recipient,
+    createdAt: data.created_at,
+    expiresAt: data.expires_at,
+    used: data.used,
+    txHash: data.tx_hash ?? undefined,
+    metadata: data.metadata ?? undefined,
+  };
 }
 
 async function updateLink(id: string, data: StoredPaymentLink) {
-  if (process.env.KV_REST_API_URL) {
-    // Mantener el mismo TTL
-    const ttl = Math.floor((data.expiresAt - Date.now()) / 1000);
-    await kv.set(`link:${id}`, JSON.stringify(data), { ex: Math.max(ttl, 60) });
-  } else {
-    localStore.set(`link:${id}`, data);
+  if (!supabase) return;
+
+  const { error } = await supabase
+    .from('payment_links')
+    .update({
+      used: data.used,
+      tx_hash: data.txHash ?? null,
+    })
+    .eq('id', id);
+
+  if (error) {
+    throw new Error(`Supabase update error: ${error.message}`);
   }
 }
 
@@ -29,6 +53,13 @@ export async function POST(
   props: { params: Promise<{ id: string }> }
 ) {
   try {
+    if (!supabase) {
+      return NextResponse.json(
+        { success: false, error: 'Supabase no está configurado en el servidor' },
+        { status: 500 }
+      );
+    }
+
     const params = await props.params;
     const { id } = params;
     const body = await request.json();

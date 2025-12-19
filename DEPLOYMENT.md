@@ -68,6 +68,10 @@ En Vercel Dashboard → Settings → Environment Variables:
 NEXT_PUBLIC_STELLAR_NETWORK=testnet
 # Cambiar a "mainnet" cuando estés listo para producción
 
+# Supabase (persistencia de links)
+SUPABASE_URL=tu_url_supabase
+SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
+
 # URL Base (Vercel lo asigna automáticamente)
 NEXT_PUBLIC_BASE_URL=https://tu-proyecto.vercel.app
 # Actualizar después del primer deploy
@@ -124,27 +128,35 @@ vercel env add NEXT_PUBLIC_BASE_URL
 El proyecto funciona con fallback en memoria para desarrollo. 
 **Limitación:** Los links no persisten entre reinicios del servidor.
 
-### Con Vercel KV (Recomendado para Producción)
+### Con Supabase (Recomendado para Producción)
 
-#### Paso 1: Crear KV Database
+#### Paso 1: Crear Base Supabase
 
-1. Vercel Dashboard → Storage → Create Database
-2. Selecciona "KV" (Redis)
-3. Nombre: `paybylink-storage`
-4. Region: Selecciona más cercana a tu audiencia
-5. Create
-
-#### Paso 2: Conectar a tu Proyecto
-
-1. KV Dashboard → Connect to Project
-2. Selecciona `paybylink-stellar`
-3. Automáticamente agrega las variables:
+1. Ve a https://supabase.com/ → crea proyecto
+2. Copia `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY`
+3. En Supabase SQL corre:
+   ```sql
+   create table if not exists payment_links (
+     id text primary key,
+     amount numeric not null,
+     currency text not null,
+     description text not null,
+     recipient text not null,
+     created_at bigint not null,
+     expires_at bigint not null,
+     used boolean not null default false,
+     tx_hash text,
+     metadata jsonb
+   );
    ```
-   KV_URL
-   KV_REST_API_URL
-   KV_REST_API_TOKEN
-   KV_REST_API_READ_ONLY_TOKEN
-   ```
+
+#### Paso 2: Añadir env vars en Vercel
+
+En Vercel Dashboard → Project → Settings → Environment Variables
+```
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
 
 #### Paso 3: Re-deploy
 

@@ -1,4 +1,3 @@
-import { kv } from '@vercel/kv';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   generateLinkId,
@@ -10,22 +9,40 @@ import {
   type StoredPaymentLink,
 } from '@/lib/payment-links';
 import QRCode from 'qrcode';
+import { supabase } from '@/lib/supabase';
 
-// Simulador de KV para desarrollo local sin Vercel KV configurado
-const localStore = new Map<string, StoredPaymentLink>();
+async function persistLink(data: StoredPaymentLink) {
+  if (!supabase) {
+    throw new Error('Supabase no configurado');
+  }
 
-async function setLink(id: string, data: StoredPaymentLink, expiresIn: number) {
-  if (process.env.KV_REST_API_URL) {
-    // Usar Vercel KV si está configurado
-    await kv.set(`link:${id}`, JSON.stringify(data), { ex: expiresIn * 60 });
-  } else {
-    // Fallback a almacenamiento local para desarrollo
-    localStore.set(`link:${id}`, data);
+  const { error } = await supabase.from('payment_links').insert({
+    id: data.id,
+    amount: data.amount,
+    currency: data.currency,
+    description: data.description,
+    recipient: data.recipient,
+    created_at: data.createdAt,
+    expires_at: data.expiresAt,
+    used: data.used,
+    tx_hash: data.txHash ?? null,
+    metadata: data.metadata ?? null,
+  });
+
+  if (error) {
+    throw new Error(`Supabase insert error: ${error.message}`);
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    if (!supabase) {
+      return NextResponse.json(
+        { success: false, error: 'Supabase no está configurado en el servidor' },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
     const config: PaymentLinkConfig = body;
 
@@ -66,8 +83,8 @@ export async function POST(request: NextRequest) {
       metadata: config.metadata,
     };
 
-    // Guardar en KV (o local)
-    await setLink(linkId, storedLink, expiresIn);
+    // Guardar en Supabase
+    await persistLink(storedLink);
 
     // Generar URL completa
     const baseUrl =

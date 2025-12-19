@@ -1,19 +1,35 @@
-import { kv } from '@vercel/kv';
 import { NextRequest, NextResponse } from 'next/server';
 import { isLinkExpired, type StoredPaymentLink } from '@/lib/payment-links';
-
-// Simulador local para desarrollo
-const localStore = new Map<string, StoredPaymentLink>();
+import { supabase } from '@/lib/supabase';
 
 async function getLink(id: string): Promise<StoredPaymentLink | null> {
-  if (process.env.KV_REST_API_URL) {
-    // Usar Vercel KV si está configurado
-    const data = await kv.get<string>(`link:${id}`);
-    return data ? JSON.parse(data) : null;
-  } else {
-    // Fallback a almacenamiento local
-    return localStore.get(`link:${id}`) || null;
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from('payment_links')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Supabase get error:', error.message);
+    return null;
   }
+
+  if (!data) return null;
+
+  return {
+    id: data.id,
+    amount: Number(data.amount),
+    currency: data.currency,
+    description: data.description,
+    recipient: data.recipient,
+    createdAt: data.created_at,
+    expiresAt: data.expires_at,
+    used: data.used,
+    txHash: data.tx_hash ?? undefined,
+    metadata: data.metadata ?? undefined,
+  };
 }
 
 export async function GET(
