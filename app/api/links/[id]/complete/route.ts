@@ -26,9 +26,10 @@ async function updateLink(id: string, data: StoredPaymentLink) {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await props.params;
     const { id } = params;
     const body = await request.json();
     const { txHash } = body;

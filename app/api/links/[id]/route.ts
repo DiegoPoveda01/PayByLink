@@ -18,9 +18,10 @@ async function getLink(id: string): Promise<StoredPaymentLink | null> {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await props.params;
     const { id } = params;
 
     // Obtener enlace del almacenamiento
