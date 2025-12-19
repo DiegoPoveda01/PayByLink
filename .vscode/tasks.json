@@ -1,0 +1,59 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Install dependencies",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"install"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "git: init",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"init"
+			],
+			"group": "build"
+		},
+		{
+			"label": "git: stage initial",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"add",
+				"-A"
+			],
+			"group": "build"
+		},
+		{
+			"label": "git: unstage docs/vercel",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"reset",
+				"README.md",
+				"COMANDOS.md",
+				"vercel.json"
+			],
+			"group": "build"
+		},
+		{
+			"label": "git: commit inicial",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"commit",
+				"-m",
+				"feat: configuración inicial del proyecto PayByLink"
+			],
+			"group": "build"
+		}
+	]
+}

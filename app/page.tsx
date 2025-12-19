@@ -1,0 +1,233 @@
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Link as LinkIcon,
+  Zap,
+  Shield,
+  Clock,
+  Sparkles,
+  ArrowRight,
+  Globe,
+} from 'lucide-react';
+
+export default function HomePage() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-white">
+      {/* Navbar */}
+      <nav className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+              <LinkIcon className="h-5 w-5 text-white" />
+            </div>
+            <span className="font-bold text-xl">PayByLink</span>
+          </div>
+          <Link href="/create">
+            <Button size="sm">
+              Crear Link
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 pt-20 pb-16">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full text-sm font-medium text-purple-700 mb-4">
+            <Sparkles className="h-4 w-4" />
+            Powered by Stellar
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
+            Cobra en Segundos,
+            <br />
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              No en Días
+            </span>
+          </h1>
+
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Genera enlaces de pago en Stellar sin registro. Sin comisiones ocultas.
+            Sin complicaciones. Solo comparte el link y recibe tu pago.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <Link href="/create">
+              <Button size="lg" className="text-lg px-8">
+                <Zap className="mr-2 h-5 w-5" />
+                Crear Link Gratis
+              </Button>
+            </Link>
+            <Button size="lg" variant="outline" className="text-lg px-8">
+              Ver Demo
+            </Button>
+          </div>
+
+          <div className="flex flex-wrap gap-8 justify-center pt-8 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <CheckIcon />
+              <span>Sin registro</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckIcon />
+              <span>Pagos instantáneos</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckIcon />
+              <span>Fees mínimos</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            ¿Por qué PayByLink?
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="h-6 w-6 text-purple-600" />
+                </div>
+                <CardTitle>Instantáneo</CardTitle>
+                <CardDescription>
+                  Crea un link en 10 segundos. Tu cliente paga y recibes el dinero
+                  inmediatamente en tu wallet.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <Shield className="h-6 w-6 text-blue-600" />
+                </div>
+                <CardTitle>Sin Registro</CardTitle>
+                <CardDescription>
+                  No necesitas crear cuenta ni proporcionar datos. Solo conecta tu wallet
+                  cuando recibas el primer pago.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                  <Globe className="h-6 w-6 text-green-600" />
+                </div>
+                <CardTitle>Global</CardTitle>
+                <CardDescription>
+                  Cobra desde cualquier parte del mundo. Sin restricciones bancarias ni
+                  fronteras. Powered by Stellar.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="container mx-auto px-4 py-16 bg-gradient-to-b from-gray-50 to-white rounded-3xl">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            Cómo Funciona
+          </h2>
+
+          <div className="space-y-8">
+            <StepCard
+              number={1}
+              title="Crea tu link"
+              description="Ingresa el monto, descripción y tu dirección de Stellar. Listo en segundos."
+            />
+            <StepCard
+              number={2}
+              title="Comparte"
+              description="Envía el link por WhatsApp, email, Telegram o donde prefieras."
+            />
+            <StepCard
+              number={3}
+              title="Recibe el pago"
+              description="Tu cliente paga con su wallet Freighter. El dinero llega instantáneamente."
+            />
+          </div>
+
+          <div className="text-center pt-12">
+            <Link href="/create">
+              <Button size="lg" className="px-8">
+                Empezar Ahora
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t mt-16">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-gradient-to-br from-purple-600 to-pink-600 rounded-md flex items-center justify-center">
+                <LinkIcon className="h-4 w-4 text-white" />
+              </div>
+              <span className="font-semibold">PayByLink</span>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Construido para la Ideatón Stellar 2025 🚀
+            </div>
+            <div className="flex gap-4 text-sm text-muted-foreground">
+              <a href="#" className="hover:text-foreground">GitHub</a>
+              <a href="#" className="hover:text-foreground">Docs</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+      <svg
+        className="w-3 h-3 text-green-600"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+  );
+}
+
+function StepCard({
+  number,
+  title,
+  description,
+}: {
+  number: number;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex gap-4">
+      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+        {number}
+      </div>
+      <div className="flex-1">
+        <h3 className="text-xl font-semibold mb-2">{title}</h3>
+        <p className="text-muted-foreground">{description}</p>
+      </div>
+    </div>
+  );
+}
