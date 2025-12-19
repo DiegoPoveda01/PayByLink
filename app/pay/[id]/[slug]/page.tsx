@@ -11,7 +11,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { Link as LinkIcon, Loader2, Clock, ExternalLink } from 'lucide-react';
 import { buildPaymentTransaction } from '@/lib/stellar/transaction';
 import { signAndSubmitTransaction } from '@/lib/wallet/freighter';
-import { formatTimeRemaining, truncateAddress } from '@/lib/stellar/config';
+import { truncateAddress } from '@/lib/stellar/config';
+import { formatTimeRemaining } from '@/lib/payment-links';
 
 interface PaymentLink {
   amount: number;
