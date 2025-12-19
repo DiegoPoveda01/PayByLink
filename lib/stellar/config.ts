@@ -1,4 +1,5 @@
-import { Networks, Server } from '@stellar/stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 
 /**
  * Configuración de red Stellar
@@ -45,7 +46,7 @@ export const STELLAR_CONFIG = {
 /**
  * Cliente Horizon singleton
  */
-export const server = new Server(STELLAR_CONFIG.horizonUrl);
+export const server = new Horizon.Server(STELLAR_CONFIG.horizonUrl);
 
 /**
  * Tipos para assets
