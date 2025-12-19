@@ -31,6 +31,7 @@ export default function CreateLinkPage() {
     description: '',
     recipientAddress: '',
     expiresIn: '1440', // 24 horas
+    ownerEmail: '',
   });
 
   const { toast } = useToast();
@@ -65,6 +66,7 @@ export default function CreateLinkPage() {
           description: formData.description,
           recipientAddress: formData.recipientAddress,
           expiresIn: parseInt(formData.expiresIn),
+          ownerEmail: formData.ownerEmail || null,
         }),
       });
 
@@ -122,6 +124,7 @@ export default function CreateLinkPage() {
       description: '',
       recipientAddress: '',
       expiresIn: '1440',
+      ownerEmail: '',
     });
   };
 
@@ -231,6 +234,22 @@ export default function CreateLinkPage() {
                     </div>
 
                     <div className="space-y-2">
+                      <Label htmlFor="ownerEmail">Tu correo (opcional, para notificaciones)</Label>
+                      <Input
+                        id="ownerEmail"
+                        type="email"
+                        placeholder="tucorreo@dominio.com"
+                        value={formData.ownerEmail}
+                        onChange={(e) =>
+                          setFormData({ ...formData, ownerEmail: e.target.value })
+                        }
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Si lo ingresas, te enviaremos un correo cuando se complete el pago.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
                       <Label htmlFor="expires">Expira en</Label>
                       <select
                         id="expires"
@@ -283,7 +302,7 @@ export default function CreateLinkPage() {
                   <div className="bg-white rounded-lg p-6 shadow-sm">
                     <div className="text-center space-y-4">
                       <div className="text-sm text-muted-foreground">
-                        💳 Pago solicitado
+                        Pago solicitado
                       </div>
                       <div className="text-4xl font-bold">
                         {formData.amount || '0'} {formData.currency}
@@ -349,7 +368,7 @@ export default function CreateLinkPage() {
                 {/* Info */}
                 <div className="text-sm text-muted-foreground">
                   <p>
-                    ⏰ Expira:{' '}
+                    Expira:{' '}
                     {new Date(generatedLink.expiresAt).toLocaleString('es-ES')}
                   </p>
                 </div>

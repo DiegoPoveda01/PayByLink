@@ -75,6 +75,11 @@ SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 # URL Base (Vercel lo asigna automáticamente)
 NEXT_PUBLIC_BASE_URL=https://tu-proyecto.vercel.app
 # Actualizar después del primer deploy
+
+# Notificaciones por Email (Opcional con Resend)
+RESEND_API_KEY=tu_api_key_de_resend
+# Opcional: define remitente personalizado
+RESEND_FROM="PayByLink <no-reply@tu-dominio.com>"
 ```
 
 ### Paso 4: Deploy
@@ -179,6 +184,27 @@ vercel logs --follow
 ```
 
 ---
+
+## Notificaciones por Email (Resend)
+
+### ¿Qué hace?
+- Envía un correo al dueño del enlace cuando el pago se completa.
+
+### Requisitos
+- Crear el enlace con un campo de correo del dueño.
+- Configurar `RESEND_API_KEY` en Vercel.
+- Opcional: `RESEND_FROM` para el remitente.
+
+### Flujo
+1. El usuario paga y la API `POST /api/links/{id}/complete` registra el `txHash`.
+2. Si existe `owner_email` en Supabase y `RESEND_API_KEY`, se envía el correo con detalles del pago y link a Stellar Expert.
+
+### Troubleshooting
+- Si no recibes correo:
+   - Verifica `RESEND_API_KEY` en Vercel.
+   - Revisa logs de `complete` route en Vercel.
+   - Confirma que el enlace tiene `owner_email` almacenado.
+
 
 ## Testing en Producción
 

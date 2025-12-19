@@ -26,6 +26,7 @@ export interface StoredPaymentLink {
   used: boolean;
   txHash?: string;
   metadata?: Record<string, any>;
+  ownerEmail?: string;
 }
 
 /**

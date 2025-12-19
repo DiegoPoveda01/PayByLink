@@ -11,7 +11,7 @@ import {
 import QRCode from 'qrcode';
 import { supabase } from '@/lib/supabase';
 
-async function persistLink(data: StoredPaymentLink) {
+async function persistLink(data: StoredPaymentLink, ownerEmail: string | null) {
   if (!supabase) {
     throw new Error('Supabase no configurado');
   }
@@ -27,6 +27,7 @@ async function persistLink(data: StoredPaymentLink) {
     used: data.used,
     tx_hash: data.txHash ?? null,
     metadata: data.metadata ?? null,
+    owner_email: ownerEmail ?? null,
   });
 
   if (error) {
@@ -45,6 +46,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const config: PaymentLinkConfig = body;
+    const ownerEmail: string | null = body.ownerEmail ?? null;
 
     // Validar configuración
     const validation = validateLinkConfig(config);
@@ -84,7 +86,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Guardar en Supabase
-    await persistLink(storedLink);
+    await persistLink(storedLink, ownerEmail);
 
     // Generar URL completa
     const baseUrl =
