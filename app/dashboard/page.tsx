@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { Eye, TrendingUp, Copy, ExternalLink, Trash2, Plus } from 'lucide-react';
+import { Eye, TrendingUp, Copy, ExternalLink, Plus, Link as LinkIcon } from 'lucide-react';
 import Link from 'next/link';
 
 interface LinkStat {
@@ -152,158 +152,172 @@ export default function DashboardPage() {
 
         {/* Stats Overview */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-slate-400">Enlaces Creados</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-white">{stats.totalLinks}</div>
-                <p className="text-xs text-slate-500 mt-1">Total de enlaces</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-slate-400">Vistas Totales</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-white flex items-center gap-2">
-                  {stats.totalViews}
-                  <Eye className="w-5 h-5 text-blue-400" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-purple-100 text-sm font-medium">Enlaces Creados</p>
+                <div className="w-10 h-10 bg-purple-400/30 rounded-lg flex items-center justify-center">
+                  <LinkIcon className="w-5 h-5 text-white" />
                 </div>
-                <p className="text-xs text-slate-500 mt-1">Personas que vieron tus enlaces</p>
-              </CardContent>
-            </Card>
+              </div>
+              <div className="text-4xl font-bold text-white mb-1">{stats.totalLinks}</div>
+              <p className="text-purple-200 text-xs">Total de enlaces</p>
+            </div>
 
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-slate-400">Conversiones</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-white flex items-center gap-2">
-                  {stats.totalConversions}
-                  <TrendingUp className="w-5 h-5 text-green-400" />
+            <div className="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-blue-100 text-sm font-medium">Vistas Totales</p>
+                <div className="w-10 h-10 bg-blue-400/30 rounded-lg flex items-center justify-center">
+                  <Eye className="w-5 h-5 text-white" />
                 </div>
-                <p className="text-xs text-slate-500 mt-1">Pagos completados</p>
-              </CardContent>
-            </Card>
+              </div>
+              <div className="text-4xl font-bold text-white mb-1">{stats.totalViews}</div>
+              <p className="text-blue-200 text-xs">Personas que vieron tus enlaces</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-500 to-green-700 rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-green-100 text-sm font-medium">Conversiones</p>
+                <div className="w-10 h-10 bg-green-400/30 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </div>
+              </div>
+              <div className="text-4xl font-bold text-white mb-1">{stats.totalConversions}</div>
+              <p className="text-green-200 text-xs">Pagos completados</p>
+            </div>
           </div>
         )}
 
         {/* Links Table */}
         {stats && stats.links.length > 0 ? (
           <div className="space-y-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-white">Mis Enlaces</h2>
-              <div className="space-x-2">
-                <Button onClick={handleRefresh} variant="outline" size="sm">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Mis Enlaces</h2>
+              <div className="flex gap-3">
+                <Button onClick={handleRefresh} variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 hover:bg-slate-600">
                   Actualizar
                 </Button>
                 <Link href="/create">
-                  <Button size="sm">
+                  <Button size="sm" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
                     <Plus className="w-4 h-4 mr-2" />
-                    Nuevo
+                    Nuevo Enlace
                   </Button>
                 </Link>
               </div>
             </div>
 
             {stats.links.map((link) => (
-              <Card key={link.id} className="hover:shadow-lg transition-shadow">
-                <CardContent className="pt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-                    {/* Description */}
-                    <div>
-                      <p className="font-semibold text-white">{link.description}</p>
-                      <p className="text-sm text-slate-400">
-                        {link.amount} {link.currency}
-                      </p>
-                    </div>
+              <div key={link.id} className="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-xl p-6 hover:shadow-xl hover:border-slate-600/50 transition-all">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                  {/* Description & Amount */}
+                  <div className="lg:col-span-4">
+                    <p className="font-semibold text-white text-lg mb-1">{link.description}</p>
+                    <p className="text-2xl font-bold text-purple-400">
+                      {link.amount} {link.currency}
+                    </p>
+                  </div>
 
-                    {/* Status */}
-                    <div>
-                      <div className="flex gap-1">
-                        {link.used ? (
-                          <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded text-xs font-medium">
-                            Pagado
-                          </span>
-                        ) : link.expired ? (
-                          <span className="px-2 py-1 bg-red-500/20 text-red-300 rounded text-xs font-medium">
-                            Expirado
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs font-medium">
-                            Activo
-                          </span>
-                        )}
+                  {/* Status Badge */}
+                  <div className="lg:col-span-2">
+                    {link.used ? (
+                      <span className="inline-flex px-3 py-1.5 bg-green-500/20 text-green-300 rounded-full text-sm font-semibold border border-green-500/30">
+                        ✓ Pagado
+                      </span>
+                    ) : link.expired ? (
+                      <span className="inline-flex px-3 py-1.5 bg-red-500/20 text-red-300 rounded-full text-sm font-semibold border border-red-500/30">
+                        ⏰ Expirado
+                      </span>
+                    ) : (
+                      <span className="inline-flex px-3 py-1.5 bg-blue-500/20 text-blue-300 rounded-full text-sm font-semibold border border-blue-500/30">
+                        🔗 Activo
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Stats */}
+                  <div className="lg:col-span-4 grid grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 rounded-lg p-3 text-center">
+                      <div className="flex items-center justify-center gap-2 mb-1">
+                        <Eye className="w-4 h-4 text-blue-400" />
+                        <p className="text-2xl font-bold text-white">{link.views}</p>
                       </div>
-                    </div>
-
-                    {/* Views */}
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-white flex items-center justify-center gap-2">
-                        {link.views}
-                        <Eye className="w-4 h-4 text-slate-400" />
-                      </p>
                       <p className="text-xs text-slate-400">vistas</p>
                     </div>
 
-                    {/* Conversion Rate */}
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-white">{link.conversionRate.toFixed(1)}%</p>
+                    <div className="bg-slate-700/30 rounded-lg p-3 text-center">
+                      <div className="flex items-center justify-center gap-2 mb-1">
+                        <TrendingUp className="w-4 h-4 text-green-400" />
+                        <p className="text-2xl font-bold text-white">{link.conversionRate.toFixed(0)}%</p>
+                      </div>
                       <p className="text-xs text-slate-400">conversión</p>
                     </div>
+                  </div>
 
-                    {/* Date */}
-                    <div className="text-sm text-slate-400">
-                      <p className="text-xs">
-                        {new Date(link.createdAt).toLocaleDateString('es-CL')}
-                      </p>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-2 justify-end">
-                      <button
-                        onClick={() => handleCopyUrl(link.id)}
-                        className="p-2 hover:bg-slate-700 rounded transition"
-                        title="Copiar URL"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </button>
+                  {/* Actions */}
+                  <div className="lg:col-span-2 flex gap-2 justify-end">
+                    <Button
+                      onClick={() => handleCopyUrl(link.id)}
+                      variant="outline"
+                      size="sm"
+                      className="bg-slate-700/50 border-slate-600 hover:bg-slate-600"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="bg-slate-700/50 border-slate-600 hover:bg-slate-600"
+                    >
                       <a
                         href={`https://stellar.expert/explorer/testnet/account/${link.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 hover:bg-slate-700 rounded transition"
-                        title="Ver en Stellar"
                       >
                         <ExternalLink className="w-4 h-4" />
                       </a>
-                    </div>
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+
+                {/* Date footer */}
+                <div className="mt-4 pt-4 border-t border-slate-700/50">
+                  <p className="text-xs text-slate-400">
+                    Creado: {new Date(link.createdAt).toLocaleDateString('es-CL', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         ) : isLoading ? (
-          <Card>
-            <CardContent className="pt-6 text-center text-slate-400">
-              Cargando enlaces...
-            </CardContent>
-          </Card>
+          <div className="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-xl p-12 text-center">
+            <div className="animate-pulse">
+              <div className="w-16 h-16 bg-slate-700 rounded-full mx-auto mb-4"></div>
+              <p className="text-slate-400 text-lg">Cargando enlaces...</p>
+            </div>
+          </div>
         ) : (
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <p className="text-slate-400 mb-4">No tienes enlaces aún</p>
+          <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur border border-slate-700/50 rounded-xl p-12 text-center">
+            <div className="max-w-md mx-auto">
+              <div className="w-20 h-20 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <LinkIcon className="w-10 h-10 text-slate-500" />
+              </div>
+              <p className="text-slate-300 text-lg mb-2 font-semibold">No tienes enlaces aún</p>
+              <p className="text-slate-500 mb-6">Crea tu primer enlace de pago en segundos</p>
               <Link href="/create">
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
+                <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                  <Plus className="w-5 h-5 mr-2" />
                   Crear tu primer enlace
                 </Button>
               </Link>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
       </div>
     </div>
