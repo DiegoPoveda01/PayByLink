@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { Eye, TrendingUp, Copy, ExternalLink, Plus, Link as LinkIcon } from 'lucide-react';
+import { Eye, TrendingUp, Copy, ExternalLink, Plus, Link as LinkIcon, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 interface LinkStat {
@@ -174,6 +174,10 @@ export default function DashboardPage() {
       <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
         {/* Header */}
         <div className="mb-8">
+          <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-4 transition-colors">
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">Volver al inicio</span>
+          </Link>
           <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
           <p className="text-cyan-400 text-lg">{ownerEmail}</p>
         </div>

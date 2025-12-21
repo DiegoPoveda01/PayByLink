@@ -12,24 +12,24 @@ import {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-white">
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-blue-950">
       {/* Navbar */}
-      <nav className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <nav className="border-b border-slate-800/50 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
               <LinkIcon className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-xl">PayByLink</span>
+            <span className="font-bold text-xl text-white">PayByLink</span>
           </div>
           <div className="flex gap-2">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-800">
                 Dashboard
               </Button>
             </Link>
             <Link href="/create">
-              <Button size="sm">
+              <Button size="sm" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700">
                 Crear Link
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -41,37 +41,37 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 pt-20 pb-16">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full text-sm font-medium text-purple-700 mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-sm font-semibold text-cyan-400 mb-4">
             <Sparkles className="h-4 w-4" />
             Powered by Stellar
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white">
             Cobra en Segundos,
             <br />
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
               No en Días
             </span>
           </h1>
 
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
             Genera enlaces de pago en Stellar sin registro. Sin comisiones ocultas.
             Sin complicaciones. Solo comparte el link y recibe tu pago.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Link href="/create">
-              <Button size="lg" className="text-lg px-8">
+              <Button size="lg" className="text-lg px-8 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 shadow-lg shadow-cyan-500/20">
                 <Zap className="mr-2 h-5 w-5" />
                 Crear Link Gratis
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="text-lg px-8">
+            <Button size="lg" variant="outline" className="text-lg px-8 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
               Ver Demo
             </Button>
           </div>
 
-          <div className="flex flex-wrap gap-8 justify-center pt-8 text-sm text-muted-foreground">
+          <div className="flex flex-wrap gap-8 justify-center pt-8 text-sm text-slate-400">
             <div className="flex items-center gap-2">
               <CheckIcon />
               <span>Sin registro</span>
@@ -91,44 +91,44 @@ export default function HomePage() {
       {/* Features */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">
             ¿Por qué PayByLink?
           </h2>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <Card>
+            <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur hover:border-cyan-500/30 transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="h-6 w-6 text-purple-600" />
+                <div className="w-12 h-12 bg-cyan-500/10 border border-cyan-500/20 rounded-xl flex items-center justify-center mb-4">
+                  <Zap className="h-6 w-6 text-cyan-400" />
                 </div>
-                <CardTitle>Instantáneo</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Instantáneo</CardTitle>
+                <CardDescription className="text-slate-400">
                   Crea un link en 10 segundos. Tu cliente paga y recibes el dinero
                   inmediatamente en tu wallet.
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur hover:border-blue-500/30 transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-blue-600" />
+                <div className="w-12 h-12 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+                  <Shield className="h-6 w-6 text-blue-400" />
                 </div>
-                <CardTitle>Sin Registro</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Sin Registro</CardTitle>
+                <CardDescription className="text-slate-400">
                   No necesitas crear cuenta ni proporcionar datos. Solo conecta tu wallet
                   cuando recibas el primer pago.
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur hover:border-emerald-500/30 transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <Globe className="h-6 w-6 text-green-600" />
+                <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mb-4">
+                  <Globe className="h-6 w-6 text-emerald-400" />
                 </div>
-                <CardTitle>Global</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Global</CardTitle>
+                <CardDescription className="text-slate-400">
                   Cobra desde cualquier parte del mundo. Sin restricciones bancarias ni
                   fronteras. Powered by Stellar.
                 </CardDescription>
@@ -139,9 +139,9 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="container mx-auto px-4 py-16 bg-gradient-to-b from-gray-50 to-white rounded-3xl">
+      <section className="container mx-auto px-4 py-16 bg-slate-900/50 rounded-3xl border border-slate-800">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">
             Cómo Funciona
           </h2>
 
@@ -165,7 +165,7 @@ export default function HomePage() {
 
           <div className="text-center pt-12">
             <Link href="/create">
-              <Button size="lg" className="px-8">
+              <Button size="lg" className="px-8 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 shadow-lg shadow-cyan-500/20">
                 Empezar Ahora
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -175,21 +175,21 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t mt-16">
+      <footer className="border-t border-slate-800 mt-16 bg-slate-900/50">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-gradient-to-br from-purple-600 to-pink-600 rounded-md flex items-center justify-center">
+              <div className="w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-md flex items-center justify-center">
                 <LinkIcon className="h-4 w-4 text-white" />
               </div>
-              <span className="font-semibold">PayByLink</span>
+              <span className="font-semibold text-white">PayByLink</span>
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-slate-400">
               Construido para la Ideatón Stellar 2025 🚀
             </div>
-            <div className="flex gap-4 text-sm text-muted-foreground">
-              <a href="#" className="hover:text-foreground">GitHub</a>
-              <a href="#" className="hover:text-foreground">Docs</a>
+            <div className="flex gap-4 text-sm text-slate-400">
+              <a href="#" className="hover:text-cyan-400 transition-colors">GitHub</a>
+              <a href="#" className="hover:text-cyan-400 transition-colors">Docs</a>
             </div>
           </div>
         </div>
@@ -200,9 +200,9 @@ export default function HomePage() {
 
 function CheckIcon() {
   return (
-    <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+    <div className="w-5 h-5 bg-cyan-500/10 border border-cyan-500/30 rounded-full flex items-center justify-center">
       <svg
-        className="w-3 h-3 text-green-600"
+        className="w-3 h-3 text-cyan-400"
         fill="none"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -226,13 +226,13 @@ function StepCard({
   description: string;
 }) {
   return (
-    <div className="flex gap-4">
-      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+    <div className="flex gap-4 group">
+      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
         {number}
       </div>
       <div className="flex-1">
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-muted-foreground">{description}</p>
+        <h3 className="text-xl font-semibold mb-2 text-white">{title}</h3>
+        <p className="text-slate-400">{description}</p>
       </div>
     </div>
   );
