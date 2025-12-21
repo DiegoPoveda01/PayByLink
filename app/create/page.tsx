@@ -236,7 +236,7 @@ export default function CreateLinkPage() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden">
-      <StarfieldBackground starCount={320} />
+      <StarfieldBackground starCount={200} />
 
       <div className="relative z-10">
       {/* Navbar */}

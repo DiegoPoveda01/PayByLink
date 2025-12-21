@@ -50,6 +50,7 @@ export function StarfieldBackground({
   const rafRef = useRef<number | null>(null);
   const nextShootAtRef = useRef<number>(0);
   const parallaxRef = useRef<{ x: number; y: number; targetX: number; targetY: number }>({ x: 0, y: 0, targetX: 0, targetY: 0 });
+  const visibleRef = useRef<boolean>(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -57,7 +58,24 @@ export function StarfieldBackground({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+    // Detect quality tier
+    const getTier = () => {
+      const mem = (navigator as any).deviceMemory || 4;
+      const cores = navigator.hardwareConcurrency || 4;
+      const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+      if (isMobile || mem <= 4 || cores <= 4) return 'low';
+      if (mem <= 8 || cores <= 8) return 'medium';
+      return 'high';
+    };
+
+    const tier = getTier();
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isLow = tier === 'low' || prefersReducedMotion;
+    const isMedium = tier === 'medium' && !prefersReducedMotion;
+    const isHigh = tier === 'high' && !prefersReducedMotion;
+
+    // Cap device pixel ratio to reduce fill cost
+    const dpr = Math.min(1.5, Math.max(1, window.devicePixelRatio || 1));
 
     const palette: [number, number, number][] = [
       [255, 255, 255], // white
@@ -74,24 +92,25 @@ export function StarfieldBackground({
       canvas.style.height = `${h}px`;
 
       // Recreate stars on resize to fill area
-      starsRef.current = Array.from({ length: starCount }, () => {
+      const count = isLow ? Math.floor(starCount * 0.45) : isMedium ? Math.floor(starCount * 0.7) : starCount;
+      starsRef.current = Array.from({ length: count }, () => {
         const color = palette[Math.floor(Math.random() * palette.length)];
         const r = minRadius + Math.random() * (maxRadius - minRadius);
         return {
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           r: r * dpr,
-          alpha: 0.8,
-          baseAlpha: 0.6 + Math.random() * 0.4,
+          alpha: 0.7,
+          baseAlpha: 0.55 + Math.random() * 0.35,
           twinkleSpeed: 0.5 + Math.random() * 1.2,
-          vx: (Math.random() - 0.5) * drift * dpr,
-          vy: (Math.random() - 0.5) * drift * dpr,
+          vx: (Math.random() - 0.5) * drift * (isLow ? 0.6 : 1) * dpr,
+          vy: (Math.random() - 0.5) * drift * (isLow ? 0.6 : 1) * dpr,
           color,
           phase: Math.random() * Math.PI * 2,
         } as Star;
       });
       shootersRef.current = [];
-      nextShootAtRef.current = performance.now() + (shootFrequency * 1000) * (0.5 + Math.random());
+      nextShootAtRef.current = performance.now() + ((isLow ? shootFrequency * 1.6 : isMedium ? shootFrequency * 1.2 : shootFrequency) * 1000) * (0.5 + Math.random());
     };
 
     resize();
@@ -104,13 +123,19 @@ export function StarfieldBackground({
       // Clear with transparent to allow underlying gradient
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Pause when not visible
+      if (!visibleRef.current) {
+        rafRef.current = requestAnimationFrame(step);
+        return;
+      }
+
       // Ease parallax towards target
       parallaxRef.current.x += (parallaxRef.current.targetX - parallaxRef.current.x) * 0.06;
       parallaxRef.current.y += (parallaxRef.current.targetY - parallaxRef.current.y) * 0.06;
 
       const stars = starsRef.current;
       ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
+      if (isHigh) ctx.globalCompositeOperation = 'lighter';
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
         // Update position
@@ -124,24 +149,25 @@ export function StarfieldBackground({
 
         // Twinkle
         s.alpha = s.baseAlpha + Math.sin(now * 0.001 * s.twinkleSpeed + s.phase) * twinkle;
-        const a = Math.max(0.12, Math.min(1, s.alpha));
+        const a = Math.max(0.1, Math.min(0.95, s.alpha));
 
         // Parallax offset based on star size (larger stars move more)
-        const px = parallaxRef.current.x * (0.2 + s.r * 0.05);
-        const py = parallaxRef.current.y * (0.2 + s.r * 0.05);
+        const parallaxScale = isLow ? 0.1 : isMedium ? 0.15 : 0.2;
+        const px = parallaxRef.current.x * (parallaxScale + s.r * 0.04);
+        const py = parallaxRef.current.y * (parallaxScale + s.r * 0.04);
 
         // Draw star with subtle glow
         ctx.beginPath();
         ctx.fillStyle = `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, ${a})`;
-        ctx.shadowColor = `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, ${Math.min(0.4, a)})`;
-        ctx.shadowBlur = 6;
+        ctx.shadowColor = `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, ${Math.min(isLow ? 0.25 : 0.4, a)})`;
+        ctx.shadowBlur = isLow ? 2 : isMedium ? 4 : 6;
         ctx.arc(s.x + px, s.y + py, s.r, 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.restore();
 
       // Shooting stars
-      if (shootingStars && now >= nextShootAtRef.current) {
+      if (shootingStars && !prefersReducedMotion && now >= nextShootAtRef.current) {
         const speed = (80 + Math.random() * 80) * dpr; // px/s
         const angle = (Math.PI / 4) + (Math.random() - 0.5) * (Math.PI / 8); // roughly top-left to bottom-right
         const vx = Math.cos(angle) * speed * dt;
@@ -154,12 +180,12 @@ export function StarfieldBackground({
           vx,
           vy,
           life: 0,
-          maxLife: 1400 + Math.random() * 800,
-          length: 80 * dpr,
-          width: 1.5 * dpr,
+          maxLife: (isLow ? 900 : 1400) + Math.random() * (isLow ? 500 : 800),
+          length: (isLow ? 60 : 80) * dpr,
+          width: (isLow ? 1.2 : 1.5) * dpr,
           color: [200, 240, 255],
         });
-        nextShootAtRef.current = now + (shootFrequency * 1000) * (0.6 + Math.random());
+        nextShootAtRef.current = now + ((isLow ? shootFrequency * 1.5 : shootFrequency) * 1000) * (0.6 + Math.random());
       }
 
       // Render shooting stars with trail
@@ -209,19 +235,33 @@ export function StarfieldBackground({
     const onResize = () => resize();
     window.addEventListener('resize', onResize);
     const onMouseMove = (e: MouseEvent) => {
+      if (prefersReducedMotion) return;
       const { innerWidth: w, innerHeight: h } = window;
       const nx = (e.clientX / w - 0.5) * 2; // -1..1
       const ny = (e.clientY / h - 0.5) * 2;
-      parallaxRef.current.targetX = nx * 8 * dpr;
-      parallaxRef.current.targetY = ny * 8 * dpr;
+      const amp = isLow ? 4 : isMedium ? 6 : 8;
+      parallaxRef.current.targetX = nx * amp * dpr;
+      parallaxRef.current.targetY = ny * amp * dpr;
     };
-    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+
+    const onVisibility = () => {
+      visibleRef.current = !document.hidden;
+      if (!visibleRef.current) {
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      } else {
+        if (!rafRef.current) rafRef.current = requestAnimationFrame(step);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
     rafRef.current = requestAnimationFrame(step);
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [starCount, maxRadius, minRadius, drift, twinkle, shootingStars, shootFrequency]);
 

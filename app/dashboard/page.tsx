@@ -94,7 +94,7 @@ export default function DashboardPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden flex items-center justify-center p-4">
-        <StarfieldBackground starCount={300} />
+        <StarfieldBackground starCount={160} />
 
         <div className="relative z-10">
         <Card className="w-full max-w-md bg-slate-800/50 border-slate-700/50 backdrop-blur">
@@ -145,7 +145,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden">
-      <StarfieldBackground starCount={350} />
+      <StarfieldBackground starCount={200} />
 
       <div className="relative z-10">
       {/* Navbar */}

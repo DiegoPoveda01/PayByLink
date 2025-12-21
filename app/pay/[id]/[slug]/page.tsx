@@ -175,7 +175,7 @@ export default function PaymentPage() {
   if (error && !paymentLink) {
     return (
       <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden flex items-center justify-center p-4">
-        <StarfieldBackground starCount={320} />
+        <StarfieldBackground starCount={180} />
 
         <div className="relative z-10">
         <Card className="max-w-md w-full border-red-500/30 bg-slate-900/50">
@@ -198,7 +198,7 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden">
-      <StarfieldBackground starCount={360} />
+      <StarfieldBackground starCount={220} />
 
       <div className="relative z-10">
       {/* Navbar */}

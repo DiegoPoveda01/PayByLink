@@ -14,7 +14,7 @@ import { StarfieldBackground } from '@/components/starfield';
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden">
-      <StarfieldBackground starCount={350} />
+      <StarfieldBackground starCount={220} />
 
       {/* Content */}
       <div className="relative z-10">
