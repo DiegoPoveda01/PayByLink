@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { buildPaymentTransaction } from '@/lib/stellar/transaction';
-import { Server, Asset, Keypair } from '@stellar/stellar-sdk';
-import { HORIZON_URL } from '@/lib/stellar/config';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -11,10 +9,11 @@ const supabase = createClient(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { reason, refundAddress } = await request.json();
+    const params = await context.params;
     const linkId = params.id;
 
     // Validaciones
@@ -149,7 +148,7 @@ export async function POST(
 // Endpoint para confirmar reembolso (cuando se firma y envía el XDR)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { refundId, txHash } = await request.json();
