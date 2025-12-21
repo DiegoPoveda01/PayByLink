@@ -127,11 +127,6 @@ export default function CreateLinkPage() {
       if (formData.ownerEmail && !isValidEmail(formData.ownerEmail)) {
         throw new Error('Ingresa un correo electrónico válido');
       }
-      }
-
-      if (!isValidStellarAddress(formData.recipientAddress)) {
-        throw new Error('Dirección Stellar inválida');
-      }
 
       // Llamar API
       const response = await fetch('/api/links/create', {
