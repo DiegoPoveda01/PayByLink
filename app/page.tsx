@@ -22,12 +22,19 @@ export default function HomePage() {
             </div>
             <span className="font-bold text-xl">PayByLink</span>
           </div>
-          <Link href="/create">
-            <Button size="sm">
-              Crear Link
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm">
+                Dashboard
+              </Button>
+            </Link>
+            <Link href="/create">
+              <Button size="sm">
+                Crear Link
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </nav>
 

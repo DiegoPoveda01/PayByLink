@@ -43,6 +43,9 @@ export default function PaymentPage() {
   useEffect(() => {
     const fetchLink = async () => {
       try {
+        // Registrar view
+        await fetch(`/api/links/${linkId}/view`, { method: 'POST' }).catch(() => {});
+
         const response = await fetch(`/api/links/${linkId}`);
         const data = await response.json();
 

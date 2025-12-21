@@ -158,11 +158,35 @@ El proyecto funciona con fallback en memoria para desarrollo.
     add column if not exists owner_email text;
     ```
 
-#### Paso 2: Añadir env vars en Vercel
+   Para analytics y views, crea también:
 
-En Vercel Dashboard → Project → Settings → Environment Variables
-```
-SUPABASE_URL=...
+   ```sql
+   create table if not exists payment_link_views (
+     id bigint primary key generated always as identity,
+     link_id text not null references payment_links(id) on delete cascade,
+     viewed_at bigint not null,
+     user_agent text,
+     ip_hash text
+   );
+
+   create index idx_views_link_id on payment_link_views(link_id);
+   create index idx_views_timestamp on payment_link_views(viewed_at);
+   
+   create table if not exists refunds (
+     id text primary key,
+     link_id text not null references payment_links(id) on delete cascade,
+     tx_hash_original text not null,
+     tx_hash_refund text,
+     amount numeric not null,
+     currency text not null,
+     status text not null default 'pending',
+     created_at bigint not null,
+     completed_at bigint
+   );
+
+   create index idx_refunds_link_id on refunds(link_id);
+   create index idx_refunds_status on refunds(status);
+   ```
 SUPABASE_SERVICE_ROLE_KEY=...
 ```
 
