@@ -17,6 +17,12 @@ import {
 } from 'lucide-react';
 import { isValidStellarAddress } from '@/lib/stellar/config';
 
+// Función de validación de email
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 export default function CreateLinkPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedLink, setGeneratedLink] = useState<{
@@ -34,7 +40,65 @@ export default function CreateLinkPage() {
     ownerEmail: '',
   });
 
+  // Estados de validación
+  const [validations, setValidations] = useState({
+    recipientAddress: { isValid: true, message: '' },
+    ownerEmail: { isValid: true, message: '' },
+  });
+
   const { toast } = useToast();
+
+  // Validar dirección Stellar en tiempo real
+  const validateStellarAddress = (address: string) => {
+    if (!address) {
+      setValidations(prev => ({
+        ...prev,
+        recipientAddress: { isValid: true, message: '' },
+      }));
+      return;
+    }
+
+    if (!isValidStellarAddress(address)) {
+      setValidations(prev => ({
+        ...prev,
+        recipientAddress: {
+          isValid: false,
+          message: 'Debe comenzar con G y tener 56 caracteres',
+        },
+      }));
+    } else {
+      setValidations(prev => ({
+        ...prev,
+        recipientAddress: { isValid: true, message: '✓ Dirección válida' },
+      }));
+    }
+  };
+
+  // Validar email en tiempo real
+  const validateEmail = (email: string) => {
+    if (!email) {
+      setValidations(prev => ({
+        ...prev,
+        ownerEmail: { isValid: true, message: '' },
+      }));
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setValidations(prev => ({
+        ...prev,
+        ownerEmail: {
+          isValid: false,
+          message: 'Formato de email inválido',
+        },
+      }));
+    } else {
+      setValidations(prev => ({
+        ...prev,
+        ownerEmail: { isValid: true, message: '✓ Email válido' },
+      }));
+    }
+  };
 
   const handleGenerateLink = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,11 +107,26 @@ export default function CreateLinkPage() {
     try {
       // Validaciones básicas
       if (!formData.amount || parseFloat(formData.amount) <= 0) {
-        throw new Error('Ingresa un monto válido');
+        throw new Error('Ingresa un monto válido mayor a 0');
       }
 
       if (!formData.description.trim()) {
-        throw new Error('Ingresa una descripción');
+        throw new Error('Ingresa una descripción del pago');
+      }
+
+      // Validar dirección Stellar
+      if (!formData.recipientAddress.trim()) {
+        throw new Error('Ingresa tu dirección Stellar');
+      }
+
+      if (!isValidStellarAddress(formData.recipientAddress)) {
+        throw new Error('La dirección Stellar debe comenzar con G y tener 56 caracteres');
+      }
+
+      // Validar email si se proporciona
+      if (formData.ownerEmail && !isValidEmail(formData.ownerEmail)) {
+        throw new Error('Ingresa un correo electrónico válido');
+      }
       }
 
       if (!isValidStellarAddress(formData.recipientAddress)) {
@@ -254,14 +333,29 @@ export default function CreateLinkPage() {
                         id="recipient"
                         placeholder="GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
                         value={formData.recipientAddress}
-                        onChange={(e) =>
-                          setFormData({ ...formData, recipientAddress: e.target.value })
-                        }
-                        className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 font-mono text-sm"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFormData({ ...formData, recipientAddress: value });
+                          validateStellarAddress(value);
+                        }}
+                        onBlur={() => validateStellarAddress(formData.recipientAddress)}
+                        className={`bg-slate-800/50 text-white placeholder:text-slate-500 font-mono text-sm ${
+                          formData.recipientAddress && !validations.recipientAddress.isValid
+                            ? 'border-red-500 focus-visible:ring-red-500'
+                            : formData.recipientAddress && validations.recipientAddress.isValid
+                            ? 'border-emerald-500 focus-visible:ring-emerald-500'
+                            : 'border-slate-700'
+                        }`}
                         required
                       />
-                      <p className="text-xs text-slate-500">
-                        Dirección donde recibirás el pago (G...)
+                      <p className={`text-xs ${
+                        formData.recipientAddress && !validations.recipientAddress.isValid
+                          ? 'text-red-400'
+                          : formData.recipientAddress && validations.recipientAddress.isValid && validations.recipientAddress.message
+                          ? 'text-emerald-400'
+                          : 'text-slate-500'
+                      }`}>
+                        {validations.recipientAddress.message || 'Dirección donde recibirás el pago (G...)'}
                       </p>
                     </div>
 
@@ -272,13 +366,28 @@ export default function CreateLinkPage() {
                         type="email"
                         placeholder="tucorreo@dominio.com"
                         value={formData.ownerEmail}
-                        onChange={(e) =>
-                          setFormData({ ...formData, ownerEmail: e.target.value })
-                        }
-                        className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFormData({ ...formData, ownerEmail: value });
+                          validateEmail(value);
+                        }}
+                        onBlur={() => validateEmail(formData.ownerEmail)}
+                        className={`bg-slate-800/50 text-white placeholder:text-slate-500 ${
+                          formData.ownerEmail && !validations.ownerEmail.isValid
+                            ? 'border-red-500 focus-visible:ring-red-500'
+                            : formData.ownerEmail && validations.ownerEmail.isValid && validations.ownerEmail.message
+                            ? 'border-emerald-500 focus-visible:ring-emerald-500'
+                            : 'border-slate-700'
+                        }`}
                       />
-                      <p className="text-xs text-slate-500">
-                        Si lo ingresas, te enviaremos un correo cuando se complete el pago.
+                      <p className={`text-xs ${
+                        formData.ownerEmail && !validations.ownerEmail.isValid
+                          ? 'text-red-400'
+                          : formData.ownerEmail && validations.ownerEmail.isValid && validations.ownerEmail.message
+                          ? 'text-emerald-400'
+                          : 'text-slate-500'
+                      }`}>
+                        {validations.ownerEmail.message || 'Si lo ingresas, te enviaremos un correo cuando se complete el pago.'}
                       </p>
                     </div>
 
