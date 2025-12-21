@@ -26,6 +26,7 @@ const isValidEmail = (email: string): boolean => {
 export default function CreateLinkPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedLink, setGeneratedLink] = useState<{
+    id: string;
     url: string;
     qrCode: string | null;
     expiresAt: string;
@@ -151,6 +152,7 @@ export default function CreateLinkPage() {
       }
 
       setGeneratedLink({
+        id: data.data.id,
         url: data.data.url,
         qrCode: data.data.qrCode,
         expiresAt: data.data.expiresAt,
