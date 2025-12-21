@@ -162,10 +162,10 @@ export default function PaymentPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin mx-auto text-purple-600" />
-          <p className="text-muted-foreground">Cargando enlace de pago...</p>
+          <Loader2 className="h-12 w-12 animate-spin mx-auto text-cyan-400" />
+          <p className="text-slate-400">Cargando enlace de pago...</p>
         </div>
       </div>
     );
@@ -173,15 +173,15 @@ export default function PaymentPage() {
 
   if (error && !paymentLink) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white flex items-center justify-center p-4">
-        <Card className="max-w-md w-full border-red-200 bg-red-50/50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 flex items-center justify-center p-4">
+        <Card className="max-w-md w-full border-red-500/30 bg-slate-900/50">
           <CardHeader>
-            <CardTitle className="text-red-600">Error</CardTitle>
-            <CardDescription>{error}</CardDescription>
+            <CardTitle className="text-red-400">Error</CardTitle>
+            <CardDescription className="text-slate-400">{error}</CardDescription>
           </CardHeader>
           <CardContent>
             <Link href="/">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full border-slate-700 hover:bg-slate-800 text-white">
                 Volver al Inicio
               </Button>
             </Link>
@@ -192,15 +192,15 @@ export default function PaymentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950">
       {/* Navbar */}
-      <nav className="border-b bg-white/80 backdrop-blur-sm">
+      <nav className="border-b border-slate-800/50 bg-slate-900/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition">
+            <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
               <LinkIcon className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-xl">PayByLink</span>
+            <span className="font-bold text-xl text-white">PayByLink</span>
           </Link>
         </div>
       </nav>
@@ -218,24 +218,24 @@ export default function PaymentPage() {
           ) : (
             <>
               {/* Información del pago */}
-              <Card className="border-2 border-purple-200">
+              <Card className="border-2 border-cyan-500/30 bg-slate-900/50">
                 <CardHeader className="text-center">
-                  <div className="text-sm text-muted-foreground mb-2">
+                  <div className="text-sm text-slate-400 mb-2">
                     💳 Pago Solicitado
                   </div>
-                  <CardTitle className="text-5xl font-bold mb-2">
+                  <CardTitle className="text-5xl font-bold mb-2 text-white">
                     {paymentLink?.amount} {paymentLink?.currency}
                   </CardTitle>
-                  <CardDescription className="text-lg">
+                  <CardDescription className="text-lg text-slate-300">
                     {paymentLink?.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Destinatario */}
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-muted-foreground">Para:</span>
+                  <div className="flex items-center justify-between p-3 bg-slate-800/70 rounded-lg border border-slate-700">
+                    <span className="text-sm text-slate-400">Para:</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-mono">
+                      <span className="text-sm font-mono text-white">
                         {truncateAddress(paymentLink?.recipient || '')}
                       </span>
                       <a
@@ -246,7 +246,7 @@ export default function PaymentPage() {
                         }/account/${paymentLink?.recipient}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-purple-600 hover:text-purple-700"
+                        className="text-cyan-400 hover:text-cyan-300"
                       >
                         <ExternalLink className="h-4 w-4" />
                       </a>
@@ -255,7 +255,7 @@ export default function PaymentPage() {
 
                   {/* Tiempo restante */}
                   {timeRemaining && timeRemaining !== 'Expirado' && (
-                    <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center justify-center gap-2 text-sm text-slate-400">
                       <Clock className="h-4 w-4" />
                       <span>Expira en: {timeRemaining}</span>
                     </div>
@@ -277,7 +277,7 @@ export default function PaymentPage() {
                         onConnect={handleWalletConnect}
                         connectedAddress={connectedWallet || undefined}
                       />
-                      <Button onClick={handlePayment} size="lg" className="w-full">
+                      <Button onClick={handlePayment} size="lg" className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0">
                         Pagar {paymentLink?.amount} {paymentLink?.currency}
                       </Button>
                     </div>
@@ -295,20 +295,20 @@ export default function PaymentPage() {
                   )}
 
                   {/* Seguridad */}
-                  <div className="text-center text-xs text-muted-foreground pt-2">
+                  <div className="text-center text-xs text-slate-400 pt-2">
                     🔒 Pago seguro en Stellar Network
                   </div>
                 </CardContent>
               </Card>
 
               {/* Info adicional */}
-              <Card>
+              <Card className="bg-slate-900/50 border-slate-800">
                 <CardContent className="pt-6">
-                  <h3 className="font-semibold mb-2 flex items-center gap-2">
+                  <h3 className="font-semibold mb-2 flex items-center gap-2 text-white">
                     <LinkIcon className="h-4 w-4" />
                     ¿No tienes Freighter Wallet?
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-3">
+                  <p className="text-sm text-slate-400 mb-3">
                     Necesitas Freighter para pagar. Es una wallet gratuita y segura
                     para Stellar.
                   </p>
@@ -317,7 +317,7 @@ export default function PaymentPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button variant="outline" size="sm" className="w-full">
+                    <Button variant="outline" size="sm" className="w-full border-slate-700 hover:bg-slate-800 text-white">
                       Instalar Freighter
                       <ExternalLink className="ml-2 h-4 w-4" />
                     </Button>
