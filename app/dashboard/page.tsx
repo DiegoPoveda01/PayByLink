@@ -147,23 +147,24 @@ export default function DashboardPage() {
             <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
               <LinkIcon className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-xl text-white">PayByLink</span>
+            <span className="font-bold text-lg md:text-xl text-white">PayByLink</span>
           </Link>
-          <div className="flex gap-3">
+          <div className="flex gap-2 md:gap-3">
             <Link href="/create">
-              <Button variant="outline" className="border-slate-700 hover:bg-slate-800">
-                <Plus className="w-4 h-4 mr-2" />
-                Nuevo Enlace
+              <Button variant="outline" size="sm" className="border-slate-700 hover:bg-slate-800">
+                <Plus className="w-4 h-4 mr-0 md:mr-2" />
+                <span className="hidden md:inline">Nuevo Enlace</span>
               </Button>
             </Link>
             <Button
               variant="ghost"
+              size="sm"
               onClick={() => {
                 setIsAuthenticated(false);
                 setStats(null);
                 setOwnerEmail('');
               }}
-              className="text-slate-400 hover:text-white hover:bg-slate-800"
+              className="text-slate-400 hover:text-white hover:bg-slate-800 hidden md:flex"
             >
               Cerrar Sesión
             </Button>
@@ -171,51 +172,51 @@ export default function DashboardPage() {
         </div>
       </nav>
 
-      <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
+      <div className="container mx-auto px-4 py-6 md:py-8 lg:py-12 max-w-7xl">
         {/* Header */}
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-4 transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">Volver al inicio</span>
+        <div className="mb-6 md:mb-8">
+          <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-3 md:mb-4 transition-colors">
+            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="text-xs md:text-sm font-medium">Volver al inicio</span>
           </Link>
-          <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-cyan-400 text-lg">{ownerEmail}</p>
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Dashboard</h1>
+          <p className="text-cyan-400 text-sm md:text-lg truncate">{ownerEmail}</p>
         </div>
 
         {/* Stats Overview */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 rounded-2xl p-6 shadow-xl hover:shadow-cyan-500/10 transition-shadow">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-10">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-xl hover:shadow-cyan-500/10 transition-shadow">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wide">Enlaces</p>
-                <div className="w-12 h-12 bg-cyan-500/10 rounded-xl flex items-center justify-center border border-cyan-500/20">
-                  <LinkIcon className="w-6 h-6 text-cyan-400" />
+                <p className="text-cyan-400 text-xs md:text-sm font-semibold uppercase tracking-wide">Enlaces</p>
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-cyan-500/10 rounded-lg md:rounded-xl flex items-center justify-center border border-cyan-500/20">
+                  <LinkIcon className="w-5 h-5 md:w-6 md:h-6 text-cyan-400" />
                 </div>
               </div>
-              <div className="text-5xl font-bold text-white mb-2">{stats.totalLinks}</div>
-              <p className="text-slate-400 text-sm">Enlaces creados</p>
+              <div className="text-3xl md:text-5xl font-bold text-white mb-1 md:mb-2">{stats.totalLinks}</div>
+              <p className="text-slate-400 text-xs md:text-sm">Enlaces creados</p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-blue-500/20 rounded-2xl p-6 shadow-xl hover:shadow-blue-500/10 transition-shadow">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-blue-500/20 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-xl hover:shadow-blue-500/10 transition-shadow">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-blue-400 text-sm font-semibold uppercase tracking-wide">Vistas</p>
-                <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
-                  <Eye className="w-6 h-6 text-blue-400" />
+                <p className="text-blue-400 text-xs md:text-sm font-semibold uppercase tracking-wide">Vistas</p>
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-500/10 rounded-lg md:rounded-xl flex items-center justify-center border border-blue-500/20">
+                  <Eye className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
                 </div>
               </div>
-              <div className="text-5xl font-bold text-white mb-2">{stats.totalViews}</div>
-              <p className="text-slate-400 text-sm">Personas interesadas</p>
+              <div className="text-3xl md:text-5xl font-bold text-white mb-1 md:mb-2">{stats.totalViews}</div>
+              <p className="text-slate-400 text-xs md:text-sm">Personas interesadas</p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-emerald-500/20 rounded-2xl p-6 shadow-xl hover:shadow-emerald-500/10 transition-shadow">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-emerald-500/20 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-xl hover:shadow-emerald-500/10 transition-shadow sm:col-span-2 lg:col-span-1">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-emerald-400 text-sm font-semibold uppercase tracking-wide">Conversiones</p>
-                <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
-                  <TrendingUp className="w-6 h-6 text-emerald-400" />
+                <p className="text-emerald-400 text-xs md:text-sm font-semibold uppercase tracking-wide">Conversiones</p>
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-500/10 rounded-lg md:rounded-xl flex items-center justify-center border border-emerald-500/20">
+                  <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-emerald-400" />
                 </div>
               </div>
-              <div className="text-5xl font-bold text-white mb-2">{stats.totalConversions}</div>
-              <p className="text-slate-400 text-sm">Pagos completados</p>
+              <div className="text-3xl md:text-5xl font-bold text-white mb-1 md:mb-2">{stats.totalConversions}</div>
+              <p className="text-slate-400 text-xs md:text-sm">Pagos completados</p>
             </div>
           </div>
         )}
@@ -223,16 +224,17 @@ export default function DashboardPage() {
         {/* Links Table */}
         {stats && stats.links.length > 0 ? (
           <div className="space-y-4">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold text-white">Mis Enlaces</h2>
-              <div className="flex gap-3">
-                <Button onClick={handleRefresh} variant="outline" size="sm" className="border-slate-700 hover:bg-slate-800 hover:border-cyan-500/50">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 md:mb-6">
+              <h2 className="text-xl md:text-3xl font-bold text-white">Mis Enlaces</h2>
+              <div className="flex gap-2 md:gap-3 w-full sm:w-auto">
+                <Button onClick={handleRefresh} variant="outline" size="sm" className="flex-1 sm:flex-none border-slate-700 hover:bg-slate-800 hover:border-cyan-500/50">
                   Actualizar
                 </Button>
-                <Link href="/create">
-                  <Button size="sm" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 shadow-lg shadow-cyan-500/20">
+                <Link href="/create" className="flex-1 sm:flex-none">
+                  <Button size="sm" className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 shadow-lg shadow-cyan-500/20">
                     <Plus className="w-4 h-4 mr-2" />
-                    Nuevo Enlace
+                    <span className="hidden md:inline">Nuevo Enlace</span>
+                    <span className="md:hidden">Nuevo</span>
                   </Button>
                 </Link>
               </div>

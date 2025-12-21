@@ -250,34 +250,34 @@ export default function CreateLinkPage() {
         </div>
       </nav>
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-6 md:py-12">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-4 transition-colors">
-              <ArrowLeft className="h-5 w-5" />
-              <span className="text-sm font-medium">Volver al inicio</span>
+          <div className="mb-6 md:mb-8">
+            <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-3 md:mb-4 transition-colors">
+              <ArrowLeft className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-xs md:text-sm font-medium">Volver al inicio</span>
             </Link>
-            <h1 className="text-4xl font-bold text-white mb-2">Crear Enlace de Pago</h1>
-            <p className="text-slate-400 text-lg">
+            <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Crear Enlace de Pago</h1>
+            <p className="text-slate-400 text-sm md:text-lg">
               Genera un link de pago en segundos. Sin registro.
             </p>
           </div>
 
           {!generatedLink ? (
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
               {/* Formulario */}
               <Card className="bg-slate-900/50 border-slate-800">
-                <CardHeader>
-                  <CardTitle className="text-white">Datos del Pago</CardTitle>
-                  <CardDescription className="text-slate-400">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-white text-lg md:text-xl">Datos del Pago</CardTitle>
+                  <CardDescription className="text-slate-400 text-sm">
                     Ingresa la información de tu cobro
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleGenerateLink} className="space-y-4">
+                  <form onSubmit={handleGenerateLink} className="space-y-3 md:space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="amount" className="text-slate-200">Monto</Label>
+                      <Label htmlFor="amount" className="text-slate-200 text-sm">Monto</Label>
                       <div className="flex gap-2">
                         <Input
                           id="amount"
