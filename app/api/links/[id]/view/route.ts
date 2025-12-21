@@ -12,7 +12,6 @@ export async function POST(
     const userAgent = request.headers.get('user-agent') || undefined;
     const ipAddress = request.headers.get('x-forwarded-for') ||
                       request.headers.get('x-real-ip') ||
-                      request.ip ||
                       undefined;
 
     // Registrar view
