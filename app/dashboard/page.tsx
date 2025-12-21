@@ -92,7 +92,15 @@ export default function DashboardPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden flex items-center justify-center p-4">
+        {/* Animated background */}
+        <div className="fixed inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/10 to-slate-950"></div>
+          <div className="absolute top-1/4 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="relative z-10">
         <Card className="w-full max-w-md bg-slate-800/50 border-slate-700/50 backdrop-blur">
           <CardHeader>
             <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -134,12 +142,21 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950">
+    <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden">
+      {/* Animated background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/10 to-slate-950"></div>
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10">
       {/* Navbar */}
       <nav className="border-b border-slate-800/50 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -355,6 +372,7 @@ export default function DashboardPage() {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

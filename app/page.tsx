@@ -12,7 +12,17 @@ import {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-blue-950">
+    <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden">
+      {/* Animated background with Stellar elements */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-950"></div>
+        <div className="absolute top-20 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-40 left-1/3 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 right-0 w-72 h-72 bg-cyan-400/5 rounded-full blur-3xl"></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10">
       {/* Navbar */}
       <nav className="border-b border-slate-800/50 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -194,6 +204,7 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+      </div>
     </div>
   );
 }
