@@ -13,6 +13,7 @@ import { buildPaymentTransaction } from '@/lib/stellar/transaction';
 import { signAndSubmitTransaction } from '@/lib/wallet/freighter';
 import { truncateAddress } from '@/lib/stellar/config';
 import { formatTimeRemaining } from '@/lib/payment-links';
+import { StarfieldBackground } from '@/components/starfield';
 
 interface PaymentLink {
   amount: number;
@@ -174,12 +175,7 @@ export default function PaymentPage() {
   if (error && !paymentLink) {
     return (
       <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden flex items-center justify-center p-4">
-        {/* Animated background */}
-        <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/10 to-slate-950"></div>
-          <div className="absolute top-1/4 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
-        </div>
+        <StarfieldBackground starCount={320} />
 
         <div className="relative z-10">
         <Card className="max-w-md w-full border-red-500/30 bg-slate-900/50">
@@ -202,12 +198,7 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden">
-      {/* Animated background */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/10 to-slate-950"></div>
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
-      </div>
+      <StarfieldBackground starCount={360} />
 
       <div className="relative z-10">
       {/* Navbar */}
@@ -344,8 +335,8 @@ export default function PaymentPage() {
             </>
           )}
         </div>
+        </div>
+        </div>
       </div>
-      </div>
-    </div>
-  );
+    );
 }
