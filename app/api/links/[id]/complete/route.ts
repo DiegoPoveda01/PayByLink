@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { type StoredPaymentLink } from '@/lib/payment-links';
 import { supabase } from '@/lib/supabase';
-import { sendPaymentCompletedEmail } from '@/lib/notifications';
 
 async function getLink(id: string): Promise<StoredPaymentLink | null> {
   if (!supabase) return null;
@@ -96,22 +95,6 @@ export async function POST(
 
     // Actualizar en almacenamiento
     await updateLink(id, link);
-
-    // Notificar al dueño si hay correo y Resend está configurado
-    if (link.ownerEmail && process.env.RESEND_API_KEY) {
-      try {
-        await sendPaymentCompletedEmail(link.ownerEmail, {
-          id: link.id,
-          amount: link.amount,
-          currency: link.currency,
-          description: link.description,
-          recipient: link.recipient,
-          txHash,
-        });
-      } catch (notifyErr) {
-        console.error('Error enviando notificación de pago:', notifyErr);
-      }
-    }
 
     return NextResponse.json({
       success: true,
