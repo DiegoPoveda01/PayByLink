@@ -190,7 +190,7 @@ export default function HomePage() {
               <span className="font-semibold text-white">PayByLink</span>
             </div>
             <div className="text-sm text-slate-400">
-              Construido para la Ideatón Stellar 2025 🚀
+              Construido para la Ideatón Stellar 2025
             </div>
             <div className="flex gap-4 text-sm text-slate-400">
               <a href="#" className="hover:text-cyan-400 transition-colors">GitHub</a>

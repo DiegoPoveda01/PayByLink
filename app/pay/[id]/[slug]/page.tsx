@@ -229,7 +229,7 @@ export default function PaymentPage() {
               <Card className="border-2 border-cyan-500/30 bg-slate-900/50">
                 <CardHeader className="text-center">
                   <div className="text-sm text-slate-400 mb-2">
-                    💳 Pago Solicitado
+                    Pago Solicitado
                   </div>
                   <CardTitle className="text-5xl font-bold mb-2 text-white">
                     {paymentLink?.amount} {paymentLink?.currency}
@@ -304,7 +304,7 @@ export default function PaymentPage() {
 
                   {/* Seguridad */}
                   <div className="text-center text-xs text-slate-400 pt-2">
-                    🔒 Pago seguro en Stellar Network
+                    Pago seguro en Stellar Network
                   </div>
                 </CardContent>
               </Card>

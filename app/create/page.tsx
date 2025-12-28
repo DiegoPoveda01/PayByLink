@@ -71,7 +71,7 @@ export default function CreateLinkPage() {
     } else {
       setValidations(prev => ({
         ...prev,
-        recipientAddress: { isValid: true, message: '✓ Dirección válida' },
+        recipientAddress: { isValid: true, message: 'Dirección válida' },
       }));
     }
   };
@@ -97,7 +97,7 @@ export default function CreateLinkPage() {
     } else {
       setValidations(prev => ({
         ...prev,
-        ownerEmail: { isValid: true, message: '✓ Email válido' },
+        ownerEmail: { isValid: true, message: 'Email válido' },
       }));
     }
   };
@@ -207,7 +207,7 @@ export default function CreateLinkPage() {
 
   const shareTwitter = () => {
     if (generatedLink) {
-      const text = `💳 Solicitud de pago: ${formData.amount} ${formData.currency}\n\nPaga con Stellar de forma instantánea:\n${generatedLink.url}`;
+      const text = `Solicitud de pago: ${formData.amount} ${formData.currency}\n\nPaga con Stellar de forma instantánea:\n${generatedLink.url}`;
       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
       window.open(twitterUrl, '_blank');
     }
