@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { Eye, TrendingUp, Copy, ExternalLink, Plus, Link as LinkIcon, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -36,33 +37,137 @@ export default function DashboardPage() {
   const router = useRouter();
   const { toast } = useToast();
   
-  const [ownerEmail, setOwnerEmail] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLogin, setIsLogin] = useState(true); // true = login, false = registro
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [error, setError] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+
+  // Verificar sesión al cargar
+  useEffect(() => {
+    checkSession();
+  }, []);
 
   // Cargar stats cuando se autentica
   useEffect(() => {
-    if (isAuthenticated && ownerEmail) {
+    if (isAuthenticated && userEmail) {
       fetchStats();
     }
-  }, [isAuthenticated, ownerEmail]);
+  }, [isAuthenticated, userEmail]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const checkSession = async () => {
+    try {
+      const { getSupabaseClient } = await import('@/lib/supabase');
+      const supabase = getSupabaseClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user) {
+        setIsAuthenticated(true);
+        setUserEmail(session.user.email || '');
+      }
+    } catch (err) {
+      console.error('Error checking session:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ownerEmail.trim()) {
-      setError('Ingresa tu correo');
+    
+    if (!email.trim() || !password.trim()) {
+      setError('Completa todos los campos');
       return;
     }
+
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
     setError('');
-    setIsAuthenticated(true);
+    setIsSubmitting(true);
+
+    try {
+      const { getSupabaseClient } = await import('@/lib/supabase');
+      const supabase = getSupabaseClient();
+
+      if (isLogin) {
+        // Login
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password: password,
+        });
+
+        if (error) {
+          setError(error.message === 'Invalid login credentials' 
+            ? 'Credenciales incorrectas' 
+            : error.message);
+          return;
+        }
+
+        if (data.user) {
+          setIsAuthenticated(true);
+          setUserEmail(data.user.email || '');
+          toast({
+            title: 'Bienvenido',
+            description: 'Sesión iniciada correctamente',
+          });
+        }
+      } else {
+        // Registro
+        const { data, error } = await supabase.auth.signUp({
+          email: email.trim(),
+          password: password,
+        });
+
+        if (error) {
+          setError(error.message);
+          return;
+        }
+
+        if (data.user) {
+          toast({
+            title: 'Cuenta creada',
+            description: 'Ya puedes iniciar sesión',
+          });
+          setIsLogin(true);
+          setPassword('');
+        }
+      }
+    } catch (err) {
+      setError('Error en el servidor');
+      console.error('Auth error:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const { getSupabaseClient } = await import('@/lib/supabase');
+      const supabase = getSupabaseClient();
+      await supabase.auth.signOut();
+      setIsAuthenticated(false);
+      setStats(null);
+      setUserEmail('');
+      toast({
+        title: 'Sesión cerrada',
+        description: 'Has salido correctamente',
+      });
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
   };
 
   const fetchStats = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/dashboard?email=${encodeURIComponent(ownerEmail)}`);
+      const response = await fetch(`/api/dashboard?email=${encodeURIComponent(userEmail)}`);
       const data = await response.json();
 
       if (data.success) {
@@ -94,51 +199,94 @@ export default function DashboardPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 overflow-hidden flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
         <StarfieldBackground starCount={160} />
+        
+        <div className="container mx-auto px-4 py-16 relative z-10">
+          <div className="max-w-md mx-auto">
+            <Card className="bg-slate-800/90 backdrop-blur-sm border-slate-700">
+              <div className="p-8">
+                <div className="text-center mb-8">
+                  <h1 className="text-3xl font-bold text-white mb-2">
+                    {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
+                  </h1>
+                  <p className="text-slate-300">
+                    {isLogin ? 'Accede a tu panel de control' : 'Crea tu cuenta para gestionar tus enlaces'}
+                  </p>
+                </div>
 
-        <div className="relative z-10">
-        <Card className="w-full max-w-md bg-slate-800/50 border-slate-700/50 backdrop-blur">
-          <CardHeader>
-            <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <LinkIcon className="h-8 w-8 text-white" />
-            </div>
-            <CardTitle className="text-center text-2xl text-white">Dashboard</CardTitle>
-            <CardDescription className="text-center text-slate-400">Accede con tu correo para ver tus estadísticas</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <Input
-                  type="email"
-                  placeholder="tu@correo.com"
-                  value={ownerEmail}
-                  onChange={(e) => setOwnerEmail(e.target.value)}
-                  disabled={isLoading}
-                  className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
-                />
+                <form onSubmit={handleAuth} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-slate-200">Correo Electrónico</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="bg-slate-700 border-slate-600 text-white"
+                      placeholder="tu@email.com"
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-slate-200">Contraseña</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="bg-slate-700 border-slate-600 text-white"
+                      placeholder="Mínimo 6 caracteres"
+                      required
+                      disabled={isSubmitting}
+                      minLength={6}
+                    />
+                  </div>
+
+                  {error && (
+                    <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3">
+                      <p className="text-red-400 text-sm">{error}</p>
+                    </div>
+                  )}
+
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Procesando...' : (isLogin ? 'Iniciar Sesión' : 'Crear Cuenta')}
+                  </Button>
+
+                  <div className="text-center">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsLogin(!isLogin);
+                        setError('');
+                        setPassword('');
+                      }}
+                      className="text-cyan-400 hover:text-cyan-300 text-sm"
+                      disabled={isSubmitting}
+                    >
+                      {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
+                    </button>
+                  </div>
+                </form>
               </div>
-              {error && <p className="text-sm text-red-400">{error}</p>}
-              <Button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700" disabled={isLoading}>
-                {isLoading ? 'Cargando...' : 'Acceder'}
+            </Card>
+
+            <div className="mt-6 text-center">
+              <Button
+                onClick={() => router.push('/')}
+                variant="ghost"
+                className="text-slate-300 hover:text-white"
+              >
+                Volver al Inicio
               </Button>
-            </form>
-            <div className="mt-6 pt-6 border-t border-slate-700 text-center">
-              <p className="text-sm text-slate-400 mb-4">¿No tienes enlaces?</p>
-              <Link href="/create">
-                <Button variant="outline" className="w-full border-slate-700 hover:bg-slate-800">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Crear Enlace
-                </Button>
-              </Link>
-              <Link href="/" className="block mt-3">
-                <Button variant="ghost" className="w-full text-slate-400 hover:text-white">
-                  Volver al inicio
-                </Button>
-              </Link>
             </div>
-          </CardContent>
-        </Card>
+          </div>
         </div>
       </div>
     );
@@ -168,11 +316,7 @@ export default function DashboardPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {
-                setIsAuthenticated(false);
-                setStats(null);
-                setOwnerEmail('');
-              }}
+              onClick={handleLogout}
               className="text-slate-400 hover:text-white hover:bg-slate-800 hidden md:flex"
             >
               Cerrar Sesión
@@ -189,7 +333,7 @@ export default function DashboardPage() {
             <span className="text-xs md:text-sm font-medium">Volver al inicio</span>
           </Link>
           <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-cyan-400 text-sm md:text-lg truncate">{ownerEmail}</p>
+          <p className="text-cyan-400 text-sm md:text-lg truncate">{userEmail}</p>
         </div>
 
         {/* Stats Overview */}
