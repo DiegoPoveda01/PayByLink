@@ -76,6 +76,21 @@ export default function DashboardPage() {
     }
   };
 
+  const translateAuthError = (errorMessage: string): string => {
+    const errorMap: Record<string, string> = {
+      'Invalid login credentials': 'Correo o contraseña incorrectos',
+      'Email not confirmed': 'Debes confirmar tu correo electrónico',
+      'User already registered': 'Este correo ya está registrado',
+      'Password should be at least 6 characters': 'La contraseña debe tener al menos 6 caracteres',
+      'Unable to validate email address: invalid format': 'Formato de correo inválido',
+      'Signups not allowed for this instance': 'El registro está deshabilitado',
+      'Email rate limit exceeded': 'Demasiados intentos, espera unos minutos',
+      'Invalid email or password': 'Correo o contraseña incorrectos',
+    };
+
+    return errorMap[errorMessage] || errorMessage;
+  };
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -104,9 +119,7 @@ export default function DashboardPage() {
         });
 
         if (error) {
-          setError(error.message === 'Invalid login credentials' 
-            ? 'Credenciales incorrectas' 
-            : error.message);
+          setError(translateAuthError(error.message));
           return;
         }
 
@@ -127,7 +140,7 @@ export default function DashboardPage() {
 
         if (error) {
           console.error('Signup error:', error);
-          setError(error.message || 'Error al crear cuenta');
+          setError(translateAuthError(error.message));
           return;
         }
 
@@ -142,7 +155,7 @@ export default function DashboardPage() {
       }
     } catch (err: any) {
       const errorMessage = err?.message || 'Error en el servidor';
-      setError(errorMessage);
+      setError(translateAuthError(errorMessage));
       console.error('Auth error:', err);
     } finally {
       setIsSubmitting(false);
