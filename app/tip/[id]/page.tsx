@@ -280,7 +280,7 @@ export default function TipPage() {
                   {txStatus === 'failed' && (
                     <TransactionStatus 
                       status="failed"
-                      message="Error al procesar. Intenta nuevamente"
+                      errorMessage="Error al procesar. Intenta nuevamente"
                     />
                   )}
 
