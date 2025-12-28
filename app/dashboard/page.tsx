@@ -159,7 +159,7 @@ export default function DashboardPage() {
           </Link>
           <div className="flex gap-2 md:gap-3">
             <Link href="/create">
-              <Button variant="outline" size="sm" className="border-slate-700 hover:bg-slate-800">
+              <Button size="sm" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0 shadow-lg shadow-cyan-500/20">
                 <Plus className="w-4 h-4 mr-0 md:mr-2" />
                 <span className="hidden md:inline">Nuevo Enlace</span>
               </Button>
