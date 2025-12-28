@@ -569,8 +569,8 @@ export default function CreateLinkPage() {
                     <div className="flex gap-2 pt-2">
                       <Button
                         type="button"
-                        variant="outline"
-                        className="flex-1 border-slate-700 hover:bg-slate-800 text-slate-300"
+                        aria-label="Cargar Template"
+                        className="flex-1 bg-slate-700 hover:bg-slate-600 text-white border border-slate-600"
                         onClick={() => setShowTemplates(!showTemplates)}
                       >
                         <Folder className="w-4 h-4 mr-2" />
@@ -578,8 +578,8 @@ export default function CreateLinkPage() {
                       </Button>
                       <Button
                         type="button"
-                        variant="outline"
-                        className="flex-1 border-slate-700 hover:bg-slate-800 text-slate-300"
+                        aria-label="Guardar Template"
+                        className={`flex-1 text-white border-0 ${formData.recipientAddress ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-700 cursor-not-allowed'}`}
                         onClick={() => setShowSaveTemplate(!showSaveTemplate)}
                         disabled={!formData.recipientAddress}
                       >
@@ -605,7 +605,7 @@ export default function CreateLinkPage() {
                           <Button
                             onClick={handleSaveTemplate}
                             size="sm"
-                            className="bg-cyan-600 hover:bg-cyan-700"
+                            className="bg-cyan-600 hover:bg-cyan-700 text-white"
                           >
                             Guardar
                           </Button>
