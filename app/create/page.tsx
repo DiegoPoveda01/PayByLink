@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -715,9 +716,15 @@ export default function CreateLinkPage() {
                   <Label className="text-slate-200">Enlace de Pago</Label>
                   <div className="flex gap-2">
                     <Input value={generatedLink.url} readOnly className="bg-slate-800/50 border-slate-700 text-white font-mono text-sm" />
-                    <Button onClick={copyToClipboard} variant="outline" className="border-slate-700 hover:bg-slate-800 hover:text-white">
+                    <Button onClick={copyToClipboard} variant="outline" className="border-slate-700 hover:bg-slate-800 hover:text-white" aria-label="Copiar Enlace">
                       <Copy className="h-4 w-4" />
                     </Button>
+                    <a href={generatedLink.url} target="_blank" rel="noopener noreferrer" className="inline-flex" aria-label="Abrir Enlace">
+                      <Button variant="outline" className="border-slate-700 hover:bg-slate-800 hover:text-white">
+                        <LinkIcon className="h-4 w-4 mr-2" />
+                        Abrir Link
+                      </Button>
+                    </a>
                   </div>
                 </div>
 
@@ -726,10 +733,13 @@ export default function CreateLinkPage() {
                   <div className="space-y-2">
                     <Label className="text-slate-200">Código QR</Label>
                     <div className="flex flex-col items-center gap-4 p-6 bg-slate-100 rounded-xl border-2 border-dashed border-slate-300">
-                      <img
+                      <Image
                         src={generatedLink.qrCode}
                         alt="QR Code"
-                        className="w-64 h-64 rounded-lg shadow-lg"
+                        width={256}
+                        height={256}
+                        className="rounded-lg shadow-lg"
+                        unoptimized
                       />
                       <Button onClick={downloadQR} variant="outline" size="sm" className="w-full bg-white hover:bg-slate-50 border-slate-300 text-slate-800">
                         <Download className="mr-2 h-4 w-4" />
