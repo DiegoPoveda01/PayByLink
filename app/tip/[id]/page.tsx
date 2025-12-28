@@ -38,7 +38,7 @@ export default function TipPage() {
   const [wallet, setWallet] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
-  const [txStatus, setTxStatus] = useState<'pending' | 'success' | 'error' | null>(null);
+  const [txStatus, setTxStatus] = useState<'pending' | 'completed' | 'failed' | null>(null);
 
   useEffect(() => {
     loadTipConfig();
@@ -120,7 +120,7 @@ export default function TipPage() {
 
       if (result.hash) {
         setTxHash(result.hash);
-        setTxStatus('success');
+        setTxStatus('completed');
 
         // Record conversion
         await fetch(`/api/tips/${tipId}/complete`, {
@@ -140,7 +140,7 @@ export default function TipPage() {
         throw new Error('Transaction failed');
       }
     } catch (error: any) {
-      setTxStatus('error');
+      setTxStatus('failed');
       toast({
         variant: 'destructive',
         title: 'Error al enviar propina',
@@ -198,9 +198,9 @@ export default function TipPage() {
                   </div>
                   <WalletConnect onConnect={setWallet} />
                 </div>
-              ) : txStatus === 'success' ? (
+              ) : txStatus === 'completed' ? (
                 <TransactionStatus 
-                  status="success"
+                  status="completed"
                   txHash={txHash || ''}
                   message={`¡Gracias! ${selectedAmount || customAmount} ${tipConfig.currency} enviados`}
                 />
@@ -278,9 +278,9 @@ export default function TipPage() {
                     </Button>
                   </div>
 
-                  {txStatus === 'error' && (
+                  {txStatus === 'failed' && (
                     <TransactionStatus 
-                      status="error"
+                      status="failed"
                       message="Error al procesar. Intenta nuevamente"
                     />
                   )}
