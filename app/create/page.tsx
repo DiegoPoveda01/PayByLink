@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,9 +14,30 @@ import {
   ArrowLeft,
   Loader2,
   CheckCircle2,
+  Save,
+  Folder,
+  Trash2,
+  MessageCircle,
+  Send,
+  Mail,
+  Share2,
 } from 'lucide-react';
 import { isValidStellarAddress } from '@/lib/stellar/config';
 import { StarfieldBackground } from '@/components/starfield';
+import {
+  saveTemplate,
+  getTemplates,
+  deleteTemplate,
+  incrementTemplateUsage,
+  type PaymentTemplate,
+} from '@/lib/templates';
+import {
+  getWhatsAppShareUrl,
+  getTelegramShareUrl,
+  getEmailShareUrl,
+  isWebShareSupported,
+  shareViaWebShare,
+} from '@/lib/share';
 
 // Función de validación de email
 const isValidEmail = (email: string): boolean => {
@@ -48,7 +69,146 @@ export default function CreateLinkPage() {
     ownerEmail: { isValid: true, message: '' },
   });
 
+  // Templates
+  const [templates, setTemplates] = useState<PaymentTemplate[]>([]);
+  const [showTemplates, setShowTemplates] = useState(false);
+  const [showSaveTemplate, setShowSaveTemplate] = useState(false);
+  const [templateName, setTemplateName] = useState('');
+
   const { toast } = useToast();
+
+  // Cargar templates al montar
+  useEffect(() => {
+    setTemplates(getTemplates());
+  }, []);
+
+  // Guardar como template
+  const handleSaveTemplate = () => {
+    if (!templateName.trim()) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Ingresa un nombre para el template',
+      });
+      return;
+    }
+
+    try {
+      const newTemplate = saveTemplate({
+        name: templateName,
+        amount: formData.amount ? parseFloat(formData.amount) : undefined,
+        currency: formData.currency,
+        description: formData.description || undefined,
+        recipientAddress: formData.recipientAddress,
+        expiresIn: parseInt(formData.expiresIn),
+      });
+
+      setTemplates(getTemplates());
+      setTemplateName('');
+      setShowSaveTemplate(false);
+
+      toast({
+        title: 'Template guardado',
+        description: `"${newTemplate.name}" guardado correctamente`,
+      });
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'No se pudo guardar el template',
+      });
+    }
+  };
+
+  // Cargar template
+  const handleLoadTemplate = (template: PaymentTemplate) => {
+    setFormData({
+      amount: template.amount?.toString() || '',
+      currency: template.currency,
+      description: template.description || '',
+      recipientAddress: template.recipientAddress,
+      expiresIn: template.expiresIn.toString(),
+      ownerEmail: formData.ownerEmail, // Mantener email actual
+    });
+
+    incrementTemplateUsage(template.id);
+    setTemplates(getTemplates()); // Actualizar lista
+    setShowTemplates(false);
+
+    toast({
+      title: 'Template cargado',
+      description: `"${template.name}" aplicado al formulario`,
+    });
+  };
+
+  // Eliminar template
+  const handleDeleteTemplate = (id: string, name: string) => {
+    if (confirm(`¿Eliminar template "${name}"?`)) {
+      deleteTemplate(id);
+      setTemplates(getTemplates());
+      toast({
+        title: 'Template eliminado',
+        description: `"${name}" eliminado correctamente`,
+      });
+    }
+  };
+
+  // Compartir mejorado
+  const handleShareWhatsApp = () => {
+    if (!generatedLink) return;
+
+    const url = getWhatsAppShareUrl(
+      formData.description,
+      parseFloat(formData.amount),
+      formData.currency,
+      generatedLink.url
+    );
+
+    window.open(url, '_blank');
+  };
+
+  const handleShareTelegram = () => {
+    if (!generatedLink) return;
+
+    const url = getTelegramShareUrl(
+      formData.description,
+      parseFloat(formData.amount),
+      formData.currency,
+      generatedLink.url
+    );
+
+    window.open(url, '_blank');
+  };
+
+  const handleShareEmail = () => {
+    if (!generatedLink) return;
+
+    const url = getEmailShareUrl(
+      formData.description,
+      parseFloat(formData.amount),
+      formData.currency,
+      generatedLink.url
+    );
+
+    window.location.href = url;
+  };
+
+  const handleNativeShare = async () => {
+    if (!generatedLink) return;
+
+    const shared = await shareViaWebShare({
+      title: 'Solicitud de Pago - PayByLink',
+      text: `${formData.description} - ${formData.amount} ${formData.currency}`,
+      url: generatedLink.url,
+    });
+
+    if (shared) {
+      toast({
+        title: 'Compartido',
+        description: 'Link compartido exitosamente',
+      });
+    }
+  };
 
   // Validar dirección Stellar en tiempo real
   const validateStellarAddress = (address: string) => {
@@ -194,31 +354,6 @@ export default function CreateLinkPage() {
         title: 'QR Descargado',
         description: 'Código QR guardado correctamente',
       });
-    }
-  };
-
-  const shareWhatsApp = () => {
-    if (generatedLink) {
-      const text = `Pago de ${formData.amount} ${formData.currency} - ${formData.description}\n\nPaga aquí: ${generatedLink.url}`;
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-      window.open(whatsappUrl, '_blank');
-    }
-  };
-
-  const shareTwitter = () => {
-    if (generatedLink) {
-      const text = `Solicitud de pago: ${formData.amount} ${formData.currency}\n\nPaga con Stellar de forma instantánea:\n${generatedLink.url}`;
-      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-      window.open(twitterUrl, '_blank');
-    }
-  };
-
-  const shareEmail = () => {
-    if (generatedLink) {
-      const subject = `Solicitud de pago - ${formData.amount} ${formData.currency}`;
-      const body = `Hola,\n\nTe solicito un pago de ${formData.amount} ${formData.currency} por: ${formData.description}\n\nPuedes pagar de forma segura a través de este enlace:\n${generatedLink.url}\n\nGracias!`;
-      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = mailtoUrl;
     }
   };
 
@@ -429,6 +564,102 @@ export default function CreateLinkPage() {
                         </>
                       )}
                     </Button>
+
+                    {/* Template Actions */}
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="flex-1 border-slate-700 hover:bg-slate-800 text-slate-300"
+                        onClick={() => setShowTemplates(!showTemplates)}
+                      >
+                        <Folder className="w-4 h-4 mr-2" />
+                        Cargar Template
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="flex-1 border-slate-700 hover:bg-slate-800 text-slate-300"
+                        onClick={() => setShowSaveTemplate(!showSaveTemplate)}
+                        disabled={!formData.recipientAddress}
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        Guardar
+                      </Button>
+                    </div>
+
+                    {/* Save Template Form */}
+                    {showSaveTemplate && (
+                      <div className="p-3 bg-slate-800/50 rounded-lg border border-slate-700 space-y-2">
+                        <Label htmlFor="templateName" className="text-slate-200 text-sm">
+                          Nombre del Template
+                        </Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="templateName"
+                            placeholder="Ej: Consultoría mensual"
+                            value={templateName}
+                            onChange={(e) => setTemplateName(e.target.value)}
+                            className="bg-slate-900/50 border-slate-700 text-white text-sm"
+                          />
+                          <Button
+                            onClick={handleSaveTemplate}
+                            size="sm"
+                            className="bg-cyan-600 hover:bg-cyan-700"
+                          >
+                            Guardar
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Templates List */}
+                    {showTemplates && (
+                      <div className="p-3 bg-slate-800/50 rounded-lg border border-slate-700 max-h-60 overflow-y-auto">
+                        <p className="text-sm text-slate-400 mb-2">
+                          Templates guardados ({templates.length})
+                        </p>
+                        {templates.length === 0 ? (
+                          <p className="text-xs text-slate-500 text-center py-4">
+                            No hay templates guardados
+                          </p>
+                        ) : (
+                          <div className="space-y-2">
+                            {templates.map((template) => (
+                              <div
+                                key={template.id}
+                                className="flex items-center gap-2 p-2 bg-slate-900/50 rounded border border-slate-700 hover:border-cyan-500/50 transition-colors"
+                              >
+                                <button
+                                  onClick={() => handleLoadTemplate(template)}
+                                  className="flex-1 text-left"
+                                >
+                                  <div className="text-sm text-white font-medium">
+                                    {template.name}
+                                  </div>
+                                  <div className="text-xs text-slate-400">
+                                    {template.amount
+                                      ? `${template.amount} ${template.currency}`
+                                      : template.currency}{' '}
+                                    • Usado {template.usageCount} veces
+                                  </div>
+                                </button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() =>
+                                    handleDeleteTemplate(template.id, template.name)
+                                  }
+                                  className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </form>
                 </CardContent>
               </Card>
@@ -512,33 +743,57 @@ export default function CreateLinkPage() {
                 <div className="space-y-3">
                   <Label className="text-slate-200">Compartir Enlace</Label>
                   <div className="grid grid-cols-2 gap-3">
-                    <Button onClick={shareWhatsApp} variant="outline" className="w-full bg-green-500/10 border-green-500/30 hover:bg-green-500/20 text-green-400">
-                      <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                      </svg>
+                    {/* WhatsApp */}
+                    <Button
+                      onClick={handleShareWhatsApp}
+                      variant="outline"
+                      className="w-full bg-green-500/10 border-green-500/30 hover:bg-green-500/20 text-green-400"
+                    >
+                      <MessageCircle className="mr-2 h-4 w-4" />
                       WhatsApp
                     </Button>
-                    <Button onClick={shareTwitter} variant="outline" className="w-full bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20 text-blue-400">
-                      <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                      </svg>
-                      Twitter
+
+                    {/* Telegram */}
+                    <Button
+                      onClick={handleShareTelegram}
+                      variant="outline"
+                      className="w-full bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20 text-blue-400"
+                    >
+                      <Send className="mr-2 h-4 w-4" />
+                      Telegram
                     </Button>
-                    <Button onClick={copyToClipboard} className="w-full bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white">
+
+                    {/* Email */}
+                    <Button
+                      onClick={handleShareEmail}
+                      variant="outline"
+                      className="w-full bg-slate-700 hover:bg-slate-600 border-slate-600 text-white"
+                    >
+                      <Mail className="mr-2 h-4 w-4" />
+                      Email
+                    </Button>
+
+                    {/* Native Share (si está disponible) */}
+                    {isWebShareSupported() && (
+                      <Button
+                        onClick={handleNativeShare}
+                        variant="outline"
+                        className="w-full bg-cyan-500/10 border-cyan-500/30 hover:bg-cyan-500/20 text-cyan-400"
+                      >
+                        <Share2 className="mr-2 h-4 w-4" />
+                        Compartir
+                      </Button>
+                    )}
+
+                    {/* Copiar */}
+                    <Button
+                      onClick={copyToClipboard}
+                      className={`w-full bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white ${
+                        isWebShareSupported() ? '' : 'col-span-2'
+                      }`}
+                    >
                       <Copy className="mr-2 h-4 w-4" />
                       Copiar Enlace
-                    </Button>
-                    <Button onClick={() => window.open(generatedLink.url, '_blank')} className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white border-0">
-                      <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                      Abrir Link
-                    </Button>
-                    <Button onClick={shareEmail} className="w-full col-span-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white">
-                      <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                      </svg>
-                      Enviar por Email
                     </Button>
                   </div>
                 </div>
