@@ -126,7 +126,8 @@ export default function DashboardPage() {
         });
 
         if (error) {
-          setError(error.message);
+          console.error('Signup error:', error);
+          setError(error.message || 'Error al crear cuenta');
           return;
         }
 
@@ -139,8 +140,9 @@ export default function DashboardPage() {
           setPassword('');
         }
       }
-    } catch (err) {
-      setError('Error en el servidor');
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Error en el servidor';
+      setError(errorMessage);
       console.error('Auth error:', err);
     } finally {
       setIsSubmitting(false);
