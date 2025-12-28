@@ -202,7 +202,6 @@ export default function TipPage() {
                 <TransactionStatus 
                   status="completed"
                   txHash={txHash || ''}
-                  message={`¡Gracias! ${selectedAmount || customAmount} ${tipConfig.currency} enviados`}
                 />
               ) : (
                 <div className="space-y-6">
