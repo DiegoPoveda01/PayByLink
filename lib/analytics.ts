@@ -6,6 +6,7 @@ export interface LinkStats {
   description: string;
   amount: number;
   currency: 'USDC' | 'XLM';
+  recipient: string;
   views: number;
   conversions: number;
   conversionRate: number;
@@ -77,6 +78,7 @@ export async function getLinkStats(linkId: string): Promise<LinkStats | null> {
       description: link.description,
       amount: Number(link.amount),
       currency: link.currency,
+      recipient: link.recipient,
       views,
       conversions,
       conversionRate,
@@ -130,6 +132,7 @@ export async function getUserDashboard(ownerEmail: string): Promise<DashboardSta
         description: link.description,
         amount: Number(link.amount),
         currency: link.currency,
+        recipient: link.recipient,
         views,
         conversions,
         conversionRate,

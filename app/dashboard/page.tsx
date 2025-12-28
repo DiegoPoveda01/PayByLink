@@ -15,6 +15,7 @@ interface LinkStat {
   description: string;
   amount: number;
   currency: 'USDC' | 'XLM';
+  recipient: string;
   views: number;
   conversions: number;
   conversionRate: number;
@@ -312,7 +313,7 @@ export default function DashboardPage() {
                       className="bg-slate-900/50 border-slate-700 hover:bg-blue-500/10 hover:border-blue-500/50 hover:text-blue-400 transition-all"
                     >
                       <a
-                        href={`https://stellar.expert/explorer/testnet/account/${link.id}`}
+                        href={`https://stellar.expert/explorer/testnet/account/${link.recipient}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
