@@ -493,14 +493,14 @@ export default function CreateLinkPage() {
                 {/* QR Code */}
                 {generatedLink.qrCode && (
                   <div className="space-y-2">
-                    <Label>Código QR</Label>
-                    <div className="flex flex-col items-center gap-4 p-6 bg-white rounded-xl border-2 border-dashed border-slate-200">
+                    <Label className="text-slate-200">Código QR</Label>
+                    <div className="flex flex-col items-center gap-4 p-6 bg-slate-100 rounded-xl border-2 border-dashed border-slate-300">
                       <img
                         src={generatedLink.qrCode}
                         alt="QR Code"
                         className="w-64 h-64 rounded-lg shadow-lg"
                       />
-                      <Button onClick={downloadQR} variant="outline" size="sm" className="w-full">
+                      <Button onClick={downloadQR} variant="outline" size="sm" className="w-full bg-white hover:bg-slate-50 border-slate-300 text-slate-800">
                         <Download className="mr-2 h-4 w-4" />
                         Descargar QR como PNG
                       </Button>
@@ -524,9 +524,15 @@ export default function CreateLinkPage() {
                       </svg>
                       Twitter
                     </Button>
-                    <Button onClick={copyToClipboard} variant="outline" className="w-full col-span-2 border-slate-700 hover:bg-slate-800 text-white">
+                    <Button onClick={copyToClipboard} variant="outline" className="w-full border-slate-700 hover:bg-slate-800 text-white">
                       <Copy className="mr-2 h-4 w-4" />
                       Copiar Enlace
+                    </Button>
+                    <Button onClick={() => window.open(generatedLink.url, '_blank')} className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white border-0">
+                      <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      Abrir Link
                     </Button>
                     <Button onClick={shareEmail} variant="outline" className="w-full col-span-2 border-slate-700 hover:bg-slate-800 text-white">
                       <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

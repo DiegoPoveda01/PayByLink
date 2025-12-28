@@ -71,7 +71,7 @@ export default function HomePage() {
                 Crear Link Gratis
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="text-lg px-8 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
+            <Button size="lg" className="text-lg px-8 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white shadow-lg">
               Ver Demo
             </Button>
           </div>
