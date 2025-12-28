@@ -524,7 +524,7 @@ export default function CreateLinkPage() {
                       </svg>
                       Twitter
                     </Button>
-                    <Button onClick={copyToClipboard} variant="outline" className="w-full border-slate-700 hover:bg-slate-800 text-white">
+                    <Button onClick={copyToClipboard} className="w-full bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white">
                       <Copy className="mr-2 h-4 w-4" />
                       Copiar Enlace
                     </Button>
@@ -534,7 +534,7 @@ export default function CreateLinkPage() {
                       </svg>
                       Abrir Link
                     </Button>
-                    <Button onClick={shareEmail} variant="outline" className="w-full col-span-2 border-slate-700 hover:bg-slate-800 text-white">
+                    <Button onClick={shareEmail} className="w-full col-span-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white">
                       <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                       </svg>
@@ -557,7 +557,7 @@ export default function CreateLinkPage() {
                     Crear Otro Link
                   </Button>
                   <Link href="/" className="flex-1">
-                    <Button variant="outline" className="w-full border-slate-700 hover:bg-slate-800 text-white">
+                    <Button className="w-full bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white">
                       Volver al Inicio
                     </Button>
                   </Link>
