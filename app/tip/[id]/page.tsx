@@ -11,7 +11,8 @@ import { StarfieldBackground } from '@/components/starfield';
 import { WalletConnect } from '@/components/wallet-connect';
 import { TransactionStatus } from '@/components/transaction-status';
 import { Heart, Coffee, DollarSign, Sparkles, Loader2 } from 'lucide-react';
-import { buildTransaction, submitTransaction } from '@/lib/stellar/transaction';
+import { buildPaymentTransaction } from '@/lib/stellar/transaction';
+import { signAndSubmitTransaction } from '@/lib/wallet/freighter';
 import { recordLinkView } from '@/lib/analytics';
 
 interface TipConfig {
@@ -106,7 +107,7 @@ export default function TipPage() {
 
     try {
       // Build transaction
-      const xdr = await buildTransaction({
+      const xdr = await buildPaymentTransaction({
         sourcePublicKey: wallet,
         destinationPublicKey: tipConfig.recipient,
         amount: amount.toString(),
@@ -115,9 +116,9 @@ export default function TipPage() {
       });
 
       // Submit transaction
-      const result = await submitTransaction(xdr);
+      const result = await signAndSubmitTransaction(xdr);
 
-      if (result.success && result.hash) {
+      if (result.hash) {
         setTxHash(result.hash);
         setTxStatus('success');
 
@@ -136,7 +137,7 @@ export default function TipPage() {
           description: `${amount} ${tipConfig.currency} enviados exitosamente`,
         });
       } else {
-        throw new Error(result.error || 'Transaction failed');
+        throw new Error('Transaction failed');
       }
     } catch (error: any) {
       setTxStatus('error');

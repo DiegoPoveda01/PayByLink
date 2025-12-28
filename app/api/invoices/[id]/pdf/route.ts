@@ -3,9 +3,10 @@ import { getInvoiceById, generateInvoiceHTML } from '@/lib/invoices';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await props.params;
     const { id } = params;
     
     const invoice = await getInvoiceById(id);
