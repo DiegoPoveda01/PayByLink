@@ -124,7 +124,7 @@ export async function getClaimableBalances(publicKey: string): Promise<
     id: string;
     asset: string;
     amount: string;
-    sponsor: string;
+    sponsor: string | undefined;
     claimants: string[];
   }>
 > {
