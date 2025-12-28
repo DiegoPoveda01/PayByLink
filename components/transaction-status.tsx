@@ -139,7 +139,7 @@ export function TransactionStatus({
             )}
             {(status === 'completed' || status === 'failed' || status === 'expired') &&
               onClose && (
-                <Button onClick={onClose} variant="outline" className="border-slate-700 hover:bg-slate-800 text-white">
+                <Button onClick={onClose} className="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white">
                   Cerrar
                 </Button>
               )}
