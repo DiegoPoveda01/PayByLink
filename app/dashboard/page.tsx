@@ -413,7 +413,12 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
                   {/* Description & Amount */}
                   <div className="lg:col-span-4">
-                    <p className="font-semibold text-white text-lg mb-2">{link.description}</p>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="font-semibold text-white text-lg">{link.description}</p>
+                      <span className="inline-flex px-2.5 py-1 text-xs rounded-full border border-slate-700/70 bg-slate-800/70 text-slate-200">
+                        {link.type === 'tip' ? 'Propina' : 'Pago'}
+                      </span>
+                    </div>
                     <p className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
                       {link.amount} {link.currency}
                     </p>

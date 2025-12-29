@@ -14,6 +14,7 @@ export interface LinkStats {
   expiresAt: number;
   expired: boolean;
   used: boolean;
+  type?: string;
 }
 
 export interface DashboardStats {
@@ -183,6 +184,7 @@ export async function getUserDashboard(ownerEmail: string): Promise<DashboardSta
         expiresAt: link.expires_at,
         expired: Date.now() > link.expires_at,
         used: link.used,
+        type: link.type ?? 'payment',
       });
     }
 
