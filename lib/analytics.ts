@@ -168,10 +168,12 @@ export async function getUserDashboard(ownerEmail: string): Promise<DashboardSta
       totalViews += views;
       totalConversions += conversions;
 
+      const tipAmount = link.metadata?.amount ?? link.metadata?.suggestedAmounts?.[0];
+
       linkStats.push({
         id: link.id,
         description: link.description,
-        amount: Number(link.amount),
+        amount: Number(link.amount ?? tipAmount ?? 0),
         currency: link.currency,
         recipient: link.recipient,
         views,
