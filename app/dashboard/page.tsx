@@ -24,6 +24,7 @@ interface LinkStat {
   expiresAt: number;
   expired: boolean;
   used: boolean;
+  type?: string;
 }
 
 interface DashboardStats {
