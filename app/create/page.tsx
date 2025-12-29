@@ -54,6 +54,7 @@ export default function CreateLinkPage() {
     qrCode: string | null;
     expiresAt: string;
   } | null>(null);
+  const [linkType, setLinkType] = useState<'payment' | 'tip'>('payment');
   
   const [formData, setFormData] = useState({
     amount: '',
@@ -268,44 +269,54 @@ export default function CreateLinkPage() {
     setIsGenerating(true);
 
     try {
-      // Validaciones básicas
-      if (!formData.amount || parseFloat(formData.amount) <= 0) {
-        throw new Error('Ingresa un monto válido mayor a 0');
-      }
-
+      // Validaciones comunes
       if (!formData.description.trim()) {
-        throw new Error('Ingresa una descripción del pago');
+        throw new Error('Ingresa una descripción');
       }
-
-      // Validar dirección Stellar
       if (!formData.recipientAddress.trim()) {
         throw new Error('Ingresa tu dirección Stellar');
       }
-
       if (!isValidStellarAddress(formData.recipientAddress)) {
         throw new Error('La dirección Stellar debe comenzar con G y tener 56 caracteres');
       }
-
-      // Validar email si se proporciona
       if (formData.ownerEmail && !isValidEmail(formData.ownerEmail)) {
         throw new Error('Ingresa un correo electrónico válido');
       }
 
-      // Llamar API
-      const response = await fetch('/api/links/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: parseFloat(formData.amount),
-          currency: formData.currency,
-          description: formData.description,
-          recipientAddress: formData.recipientAddress,
-          expiresIn: parseInt(formData.expiresIn),
-          ownerEmail: formData.ownerEmail || null,
-        }),
-      });
+      let response: Response;
+      if (linkType === 'payment') {
+        // Validación específica de pago
+        if (!formData.amount || parseFloat(formData.amount) <= 0) {
+          throw new Error('Ingresa un monto válido mayor a 0');
+        }
+
+        response = await fetch('/api/links/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: parseFloat(formData.amount),
+            currency: formData.currency,
+            description: formData.description,
+            recipientAddress: formData.recipientAddress,
+            expiresIn: parseInt(formData.expiresIn),
+            ownerEmail: formData.ownerEmail || null,
+          }),
+        });
+      } else {
+        // Crear Tip Link sin monto fijo
+        response = await fetch('/api/tips/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            currency: formData.currency,
+            description: formData.description,
+            recipientAddress: formData.recipientAddress,
+            expiresIn: parseInt(formData.expiresIn),
+            ownerEmail: formData.ownerEmail || null,
+            suggestedAmounts: [2, 5, 10, 20],
+          }),
+        });
+      }
 
       const data = await response.json();
 
@@ -413,23 +424,69 @@ export default function CreateLinkPage() {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleGenerateLink} className="space-y-3 md:space-y-4">
+                    {/* Tipo de enlace */}
                     <div className="space-y-2">
-                      <Label htmlFor="amount" className="text-slate-200 text-sm">Monto</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="amount"
-                          type="number"
-                          placeholder="50"
-                          step="0.01"
-                          min="0.01"
-                          max="10000"
-                          value={formData.amount}
-                          onChange={(e) =>
-                            setFormData({ ...formData, amount: e.target.value })
-                          }
-                          className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500"
-                          required
-                        />
+                      <Label className="text-slate-200 text-sm">Tipo de Enlace</Label>
+                      <div className="flex gap-3">
+                        <Button
+                          type="button"
+                          variant={linkType === 'payment' ? 'default' : 'outline'}
+                          onClick={() => setLinkType('payment')}
+                          className={linkType === 'payment' ? 'bg-gradient-to-r from-cyan-500 to-blue-600' : ''}
+                          size="sm"
+                        >
+                          Pago
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={linkType === 'tip' ? 'default' : 'outline'}
+                          onClick={() => setLinkType('tip')}
+                          className={linkType === 'tip' ? 'bg-gradient-to-r from-cyan-500 to-blue-600' : ''}
+                          size="sm"
+                        >
+                          Propina
+                        </Button>
+                      </div>
+                      <p className="text-xs text-slate-500">
+                        Propina: el pagador elige el monto (con sugerencias)
+                      </p>
+                    </div>
+                    {linkType === 'payment' ? (
+                      <div className="space-y-2">
+                        <Label htmlFor="amount" className="text-slate-200 text-sm">Monto</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="amount"
+                            type="number"
+                            placeholder="50"
+                            step="0.01"
+                            min="0.01"
+                            max="10000"
+                            value={formData.amount}
+                            onChange={(e) =>
+                              setFormData({ ...formData, amount: e.target.value })
+                            }
+                            className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500"
+                            required
+                          />
+                          <select
+                            value={formData.currency}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                currency: e.target.value as 'USDC' | 'XLM',
+                              })
+                            }
+                            className="w-24 rounded-md border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-white"
+                          >
+                            <option value="USDC">USDC</option>
+                            <option value="XLM">XLM</option>
+                          </select>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <Label className="text-slate-200 text-sm">Moneda de Propina</Label>
                         <select
                           value={formData.currency}
                           onChange={(e) =>
@@ -438,13 +495,14 @@ export default function CreateLinkPage() {
                               currency: e.target.value as 'USDC' | 'XLM',
                             })
                           }
-                          className="w-24 rounded-md border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-white"
+                          className="rounded-md border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-white"
                         >
                           <option value="USDC">USDC</option>
                           <option value="XLM">XLM</option>
                         </select>
+                        <p className="text-xs text-slate-500">El pagador elegirá el monto al abrir el link</p>
                       </div>
-                    </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label htmlFor="description" className="text-slate-200">Descripción</Label>
