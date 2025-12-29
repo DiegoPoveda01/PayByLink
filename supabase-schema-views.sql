@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS payment_link_views (
   viewed_at BIGINT NOT NULL,
   user_agent TEXT,
   ip_hash TEXT,
-  device_type TEXT CHECK (device_type IN ('mobile', 'tablet', 'desktop')),
+  device_type TEXT,
   os TEXT,
   browser TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
