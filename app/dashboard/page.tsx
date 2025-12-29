@@ -104,12 +104,10 @@ export default function DashboardPage() {
     try {
       const { getSupabaseClient } = await import('@/lib/supabase');
       const supabase = getSupabaseClient();
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session?.user) {
-        setIsAuthenticated(true);
-        setUserEmail(session.user.email || '');
-      }
+      // Forzar sesión fresca: si había una sesión previa, la cerramos para requerir login explícito.
+      await supabase.auth.signOut();
+      setIsAuthenticated(false);
+      setUserEmail('');
     } catch (err) {
       console.error('Error checking session:', err);
     } finally {
