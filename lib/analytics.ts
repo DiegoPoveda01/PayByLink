@@ -265,9 +265,9 @@ export async function getHourlyPattern(linkId: string): Promise<number[] | null>
 }
 
 /**
- * Obtener métricas de conversión en el tiempo
+ * Obtener métricas de conversión para un enlace específico
  */
-export async function getConversionFunnel(ownerEmail: string): Promise<{
+export async function getConversionFunnel(linkId: string): Promise<{
   views: number;
   walletConnects: number;
   completedPayments: number;
@@ -276,30 +276,21 @@ export async function getConversionFunnel(ownerEmail: string): Promise<{
   if (!supabase) return null;
 
   try {
-    // Get total views
-    const { data: links } = await supabase
-      .from('payment_links')
-      .select('id')
-      .eq('owner_email', ownerEmail);
-
-    if (!links) return null;
-
-    const linkIds = links.map(l => l.id);
-    
+    // Get total views for this link
     const { count: totalViews } = await supabase
       .from('payment_link_views')
       .select('*', { count: 'exact' })
-      .in('link_id', linkIds);
+      .eq('link_id', linkId);
 
-    // Get completed payments
-    const { count: completedPayments } = await supabase
+    // Get link status to check if completed
+    const { data: link } = await supabase
       .from('payment_links')
-      .select('*', { count: 'exact' })
-      .eq('owner_email', ownerEmail)
-      .eq('used', true);
+      .select('used')
+      .eq('id', linkId)
+      .single();
 
     const views = totalViews || 0;
-    const completed = completedPayments || 0;
+    const completed = link?.used ? 1 : 0;
     const conversionRate = views > 0 ? (completed / views) * 100 : 0;
 
     // Estimate wallet connects (approximation: 60% of views)
