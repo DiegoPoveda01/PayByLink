@@ -44,6 +44,7 @@ export default function DashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rememberSession, setRememberSession] = useState(false);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [activeTab, setActiveTab] = useState<'links' | 'analytics' | 'invoices' | 'webhooks' | 'recurring'>('links');
   const [selectedLink, setSelectedLink] = useState<string>('');
@@ -104,10 +105,21 @@ export default function DashboardPage() {
     try {
       const { getSupabaseClient } = await import('@/lib/supabase');
       const supabase = getSupabaseClient();
-      // Forzar sesión fresca: si había una sesión previa, la cerramos para requerir login explícito.
-      await supabase.auth.signOut();
-      setIsAuthenticated(false);
-      setUserEmail('');
+      const storedRemember = typeof window !== 'undefined' && localStorage.getItem('rememberSession') === 'true';
+      setRememberSession(storedRemember);
+
+      if (!storedRemember) {
+        await supabase.auth.signOut();
+        setIsAuthenticated(false);
+        setUserEmail('');
+        return;
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setIsAuthenticated(true);
+        setUserEmail(session.user.email || '');
+      }
     } catch (err) {
       console.error('Error checking session:', err);
     } finally {
@@ -165,6 +177,11 @@ export default function DashboardPage() {
         if (data.user) {
           setIsAuthenticated(true);
           setUserEmail(data.user.email || '');
+          if (rememberSession) {
+            localStorage.setItem('rememberSession', 'true');
+          } else {
+            localStorage.removeItem('rememberSession');
+          }
           toast({
             title: 'Bienvenido',
             description: 'Sesión iniciada correctamente',
@@ -209,6 +226,7 @@ export default function DashboardPage() {
       setIsAuthenticated(false);
       setStats(null);
       setUserEmail('');
+      localStorage.removeItem('rememberSession');
       toast({
         title: 'Sesión cerrada',
         description: 'Has salido correctamente',
@@ -476,6 +494,19 @@ export default function DashboardPage() {
                       disabled={isSubmitting}
                       minLength={6}
                     />
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="rememberSession"
+                      type="checkbox"
+                      checked={rememberSession}
+                      onChange={(e) => setRememberSession(e.target.checked)}
+                      className="accent-cyan-500 h-4 w-4"
+                    />
+                    <Label htmlFor="rememberSession" className="text-slate-200 text-sm">
+                      Recordar sesión en este navegador
+                    </Label>
                   </div>
 
                   {error && (
