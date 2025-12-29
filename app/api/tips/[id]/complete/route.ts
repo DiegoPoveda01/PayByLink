@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(
   request: NextRequest,
@@ -18,7 +18,12 @@ export async function POST(
       );
     }
 
-    const supabase = getSupabaseClient();
+    if (!supabase) {
+      return NextResponse.json(
+        { success: false, errors: ['Supabase no está configurado en el servidor'] },
+        { status: 500 }
+      );
+    }
 
     // Update tip link as used
     const { error: updateError } = await supabase
