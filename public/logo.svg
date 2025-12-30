@@ -1,0 +1,28 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#0F172A"/>
+  
+  <!-- Link chain icon with gradient -->
+  <defs>
+    <linearGradient id="linkGradient" x1="50" y1="50" x2="150" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="50%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Left link -->
+  <path d="M65 85 L75 75 C80 70 88 70 93 75 L103 85 C108 90 108 98 103 103 L93 113 C88 118 80 118 75 113 L65 103 C60 98 60 90 65 85 Z" 
+        fill="url(#linkGradient)" opacity="0.9"/>
+  
+  <!-- Right link -->
+  <path d="M107 97 L117 87 C122 82 130 82 135 87 L145 97 C150 102 150 110 145 115 L135 125 C130 130 122 130 117 125 L107 115 C102 110 102 102 107 97 Z" 
+        fill="url(#linkGradient)"/>
+  
+  <!-- Connection bar -->
+  <rect x="85" y="95" width="30" height="10" rx="5" fill="#38BDF8"/>
+  
+  <!-- Payment indicator (dollar sign) -->
+  <circle cx="100" cy="140" r="18" fill="#6366F1" opacity="0.2"/>
+  <text x="100" y="150" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#22D3EE" text-anchor="middle">$</text>
+</svg>

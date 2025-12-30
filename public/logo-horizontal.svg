@@ -1,0 +1,38 @@
+<svg width="400" height="100" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Logo icon -->
+  <circle cx="50" cy="50" r="45" fill="#0F172A"/>
+  
+  <defs>
+    <linearGradient id="linkGrad" x1="25" y1="25" x2="75" y2="75" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Link icon -->
+  <path d="M32 42 L37 37 C40 34 44 34 47 37 L52 42 C55 45 55 49 52 52 L47 57 C44 60 40 60 37 57 L32 52 C29 49 29 45 32 42 Z" 
+        fill="url(#linkGrad)" opacity="0.9"/>
+  <path d="M53 48 L58 43 C61 40 65 40 68 43 L73 48 C76 51 76 55 73 58 L68 63 C65 66 61 66 58 63 L53 58 C50 55 50 51 53 48 Z" 
+        fill="url(#linkGrad)"/>
+  <rect x="42" y="47" width="16" height="6" rx="3" fill="#38BDF8"/>
+  
+  <!-- Dollar sign -->
+  <circle cx="50" cy="68" r="9" fill="#6366F1" opacity="0.2"/>
+  <text x="50" y="73" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#22D3EE" text-anchor="middle">$</text>
+  
+  <!-- Text "PayByLink" -->
+  <text x="115" y="42" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#F1F5F9">
+    Pay
+  </text>
+  <text x="185" y="42" font-family="Arial, sans-serif" font-size="32" font-weight="400" fill="#94A3B8">
+    By
+  </text>
+  <text x="235" y="42" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#22D3EE">
+    Link
+  </text>
+  
+  <!-- Tagline -->
+  <text x="115" y="62" font-family="Arial, sans-serif" font-size="12" font-weight="400" fill="#64748B">
+    Pagos instantáneos en Stellar
+  </text>
+</svg>

@@ -1,0 +1,50 @@
+<svg width="800" height="200" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Dark background for dark mode -->
+  <rect width="800" height="200" fill="#0F172A"/>
+  
+  <!-- Logo icon -->
+  <circle cx="100" cy="100" r="70" fill="#1E293B"/>
+  
+  <defs>
+    <linearGradient id="mainGrad" x1="50" y1="50" x2="150" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="50%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Link chain -->
+  <path d="M60 85 L70 75 C77 68 88 68 95 75 L105 85 C112 92 112 103 105 110 L95 120 C88 127 77 127 70 120 L60 110 C53 103 53 92 60 85 Z" 
+        fill="url(#mainGrad)" opacity="0.85"/>
+  <path d="M105 95 L115 85 C122 78 133 78 140 85 L150 95 C157 102 157 113 150 120 L140 130 C133 137 122 137 115 130 L105 120 C98 113 98 102 105 95 Z" 
+        fill="url(#mainGrad)"/>
+  <rect x="80" y="95" width="40" height="12" rx="6" fill="#38BDF8"/>
+  
+  <!-- Dollar badge -->
+  <circle cx="100" cy="145" r="22" fill="#6366F1" opacity="0.2"/>
+  <text x="100" y="156" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#22D3EE" text-anchor="middle">$</text>
+  
+  <!-- Brand text -->
+  <text x="200" y="90" font-family="Arial, sans-serif" font-size="56" font-weight="700" fill="#F1F5F9">
+    Pay
+  </text>
+  <text x="320" y="90" font-family="Arial, sans-serif" font-size="56" font-weight="300" fill="#94A3B8">
+    By
+  </text>
+  <text x="420" y="90" font-family="Arial, sans-serif" font-size="56" font-weight="700" fill="#22D3EE">
+    Link
+  </text>
+  
+  <!-- Tagline with Stellar mention -->
+  <text x="200" y="125" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#64748B">
+    Pagos instantáneos en 
+  </text>
+  <text x="437" y="125" font-family="Arial, sans-serif" font-size="20" font-weight="600" fill="#6366F1">
+    Stellar
+  </text>
+  
+  <!-- Features -->
+  <text x="200" y="155" font-family="Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">
+    ⚡ Sin registro  •  💸 Sin comisiones  •  🔗 Un solo link
+  </text>
+</svg>
