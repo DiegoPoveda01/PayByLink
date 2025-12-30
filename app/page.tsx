@@ -71,9 +71,11 @@ export default function HomePage() {
                 Crear Link Gratis
               </Button>
             </Link>
-            <Button size="lg" className="text-lg px-8 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white shadow-lg">
-              Ver Demo
-            </Button>
+            <a href="https://youtu.be/73TssrJTswk" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" className="text-lg px-8 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white shadow-lg">
+                Ver Demo
+              </Button>
+            </a>
           </div>
 
           <div className="flex flex-wrap gap-8 justify-center pt-8 text-sm text-slate-400">
@@ -193,7 +195,7 @@ export default function HomePage() {
               Construido para la Ideatón Stellar 2025
             </div>
             <div className="flex gap-4 text-sm text-slate-400">
-              <a href="#" className="hover:text-cyan-400 transition-colors">GitHub</a>
+              <a href="https://github.com/DiegoPoveda01/PayByLink" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">GitHub</a>
               <a href="#" className="hover:text-cyan-400 transition-colors">Docs</a>
             </div>
           </div>
