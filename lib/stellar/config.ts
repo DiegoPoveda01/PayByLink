@@ -23,7 +23,10 @@ export const STELLAR_CONFIG = {
   assets: {
     USDC: {
       code: 'USDC',
-      issuer: 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN', // Circle USDC
+      // Circle USDC en mainnet, asset de prueba en testnet
+      issuer: process.env.NEXT_PUBLIC_STELLAR_NETWORK === 'mainnet'
+        ? 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN'
+        : 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5',
       name: 'USD Coin',
       decimals: 7,
     },
