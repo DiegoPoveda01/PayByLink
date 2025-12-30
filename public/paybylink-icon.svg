@@ -10,7 +10,8 @@
   <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
   
   <!-- Link icon from Lucide (h-5 w-5 = 20px, centered in 32px container) -->
-  <g transform="translate(16, 16) scale(0.833)">
+  <!-- Lucide viewBox is 24x24, scale to 20x20 and offset by 6px to center -->
+  <g transform="translate(6, 6) scale(0.833)">
     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" 
           stroke="white" 
           stroke-width="2" 
