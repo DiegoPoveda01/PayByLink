@@ -199,10 +199,13 @@ export default function TipPage() {
                   <WalletConnect onConnect={setWallet} />
                 </div>
               ) : txStatus === 'completed' ? (
-                <TransactionStatus 
-                  status="completed"
-                  txHash={txHash || ''}
-                />
+                <div className="space-y-4">
+                  <TransactionStatus 
+                    status="completed"
+                    txHash={txHash || ''}
+                    onClose={() => window.location.href = '/'}
+                  />
+                </div>
               ) : (
                 <div className="space-y-6">
                   <div className="text-center">
@@ -281,6 +284,7 @@ export default function TipPage() {
                     <TransactionStatus 
                       status="failed"
                       errorMessage="Error al procesar. Intenta nuevamente"
+                      onClose={() => window.location.href = '/'}
                     />
                   )}
 
