@@ -1,3 +1,89 @@
+# Guion de Pitch — PayByLink (Ideatón Stellar)
+
+Duración objetivo: 4 minutos (3–5 min aceptable)
+Formato: Pantalla + voz. Overlays simples con títulos de cada sección.
+Audiencia: Jurado técnico y de negocio, no developers puros.
+
+## 0:00–0:30 — Apertura (contexto y problema)
+"Hola, soy [tu nombre] y esto es PayByLink. Hoy el reto es cobrar online de forma rápida y confiable sin tener que montar una tienda ni integrar pasarelas complejas.
+
+Para freelancers, creadores y microcomercios, compartir un link y recibir el pago debería ser tan simple como enviar un mensaje. Con Stellar, además, los costos son bajos y las liquidaciones son rápidas."
+
+[Overlay: "Problema: cobrar fácil por link"]
+
+## 0:30–1:10 — Solución (qué es y para quién)
+"PayByLink te permite crear un enlace de cobro en segundos, compartirlo por chat, correo o redes, y recibir el pago en tu wallet. Funciona para ventas puntuales, propinas y facturas sencillas. No custodiamos tus llaves: conectas tu wallet (como Freighter) y administras tus fondos."
+
+[Overlay: "Solución: crear, compartir y cobrar"]
+
+## 1:10–2:30 — Demo guiada (flujo principal)
+[Escena: Página de crear link]
+"Para crear un link de pago es tan fácil como esto: entro a la página, pongo el monto y la descripción, y obtengo mi enlace al instante. Sin registro, sin complicaciones."
+
+[Escena: Link de pago abierto en nueva ventana]
+"Este es el enlace que puedo compartir. Cualquier persona puede abrirlo y pagar. Ahora conecto mi wallet Freighter y realizo el pago."
+
+[Escena: Estado de transacción]
+"Mientras se procesa, se muestra el estado en tiempo real. En menos de 5 segundos: completado."
+
+[Escena: Tip]
+"También puedo recibir propinas. El mismo flujo, igual de rápido y sin fricción."
+
+[Escena: Dashboard analytics]
+"Si accedo a mi dashboard, puedo ver mis transacciones: número de pagos, montos recibidos, confirmados."
+
+[Overlay: "Demo: crear → pagar → confirmar"]
+
+## 2:30–3:30 — Tecnología y seguridad (breve)
+"PayByLink está construido con Next.js (App Router), Supabase para autenticación y datos, y el SDK de Stellar para interactuar con la red. Usamos conexión de wallet como Freighter, no custodio; tus llaves y fondos permanecen bajo tu control.
+
+Además, Stellar nos habilita pagos rápidos y baratos, y soporta conceptos avanzados como path payments y split payments, que abrimos como capacidades futuras para optimizar rutas de liquidez o dividir montos entre varios destinatarios."
+
+[Overlay: "Stack: Next.js + Supabase + Stellar SDK"]
+
+## 3:30–4:10 — Valor y diferenciadores
+"¿Por qué PayByLink? Porque reduce la fricción: crear un link, compartir y cobrar en minutos. Comisiones bajas, confirmaciones rápidas y una UX clara.
+
+Diferenciadores: integración con wallets, enfoque sin custodia, visión de funcionalidades como escrow (retener fondos hasta condiciones), path/split payments, y analytics simples para decisiones."
+
+[Overlay: "Diferenciadores: sin custodia, rápido, futuro potente"]
+
+## 4:10–4:30 — Cierre y roadmap
+"Próximos pasos: pagos recurrentes, mejores analytics, plantillas de link, y mobile. Si te interesa probar o colaborar, el proyecto está desplegado y listo para feedback.
+
+Gracias por su tiempo — esto fue PayByLink sobre Stellar." 
+
+[Overlay: "Roadmap: recurring, analytics, templates, mobile"]
+
+---
+
+## Shot list / cues (para grabación)
+- Pantalla limpia en modo incógnito, con la página de crear link visible.
+- Crear link: ingresar monto y descripción simples, obtener enlace.
+- Copiar enlace y abrir en nueva ventana.
+- Conectar Freighter (cuenta de prueba), confirmar pago.
+- Mostrar transición de estado: processing → completed.
+- Crear y pagar un tip rápido (mismo flujo).
+- Abrir dashboard para mostrar historial de pagos y métricas.
+- Leer 2–3 métricas básicas (número de pagos, montos).
+
+## Checklist previo
+- Wallet de prueba (Freighter) con saldo (testnet si aplica).
+- Dirección Stellar lista para recibir pagos.
+- Preview Vercel cargando rápido (crear link, pagar, dashboard).
+- Guion impreso o teleprompter en pantalla.
+
+## Notas de edición
+- Recortar silencios.
+- Overlays breves por sección.
+- Exportar en 1080p.
+- Añadir timestamps al subir: 00:00 Intro, 00:30 Solución, 01:10 Demo, 02:30 Tech, 03:30 Valor, 04:10 Roadmap.
+
+## Entrega
+- Subir como "No listado" en YouTube.
+- Colocar enlace y timestamps en README y VIDEO-PITCH.md.
+- Incluir una lista breve de requisitos cumplidos del track.
+
 # 🎬 Guión para Video Pitch - PayByLink
 ## Duración: 5 minutos
 

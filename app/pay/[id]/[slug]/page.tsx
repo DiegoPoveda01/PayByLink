@@ -96,9 +96,20 @@ export default function PaymentPage() {
     return () => clearInterval(interval);
   }, [paymentLink]);
 
-  const handleWalletConnect = (publicKey: string) => {
+  const handleWalletConnect = async (publicKey: string) => {
     setConnectedWallet(publicKey);
     setPaymentStatus('connected');
+    
+    // Registrar conexión de wallet para analytics
+    try {
+      await fetch(`/api/links/${linkId}/wallet-connect`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wallet_address: publicKey }),
+      }).catch(() => {});
+    } catch (error) {
+      console.error('Error recording wallet connection:', error);
+    }
   };
 
   const handlePayment = async () => {

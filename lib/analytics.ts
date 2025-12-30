@@ -282,6 +282,12 @@ export async function getConversionFunnel(linkId: string): Promise<{
       .select('*', { count: 'exact' })
       .eq('link_id', linkId);
 
+    // Get actual wallet connections (no longer approximation)
+    const { count: walletConnects } = await supabase
+      .from('wallet_connections')
+      .select('*', { count: 'exact' })
+      .eq('link_id', linkId);
+
     // Get link status to check if completed
     const { data: link } = await supabase
       .from('payment_links')
@@ -290,15 +296,13 @@ export async function getConversionFunnel(linkId: string): Promise<{
       .single();
 
     const views = totalViews || 0;
+    const walletConnectionCount = walletConnects || 0;
     const completed = link?.used ? 1 : 0;
     const conversionRate = views > 0 ? (completed / views) * 100 : 0;
 
-    // Estimate wallet connects (approximation: 60% of views)
-    const walletConnects = Math.floor(views * 0.6);
-
     return {
       views,
-      walletConnects,
+      walletConnects: walletConnectionCount,
       completedPayments: completed,
       conversionRate,
     };
