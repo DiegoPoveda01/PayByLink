@@ -196,7 +196,7 @@ export default function HomePage() {
             </div>
             <div className="flex gap-4 text-sm text-slate-400">
               <a href="https://github.com/DiegoPoveda01/PayByLink" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">GitHub</a>
-              <a href="#" className="hover:text-cyan-400 transition-colors">Docs</a>
+              <a href="https://developers.stellar.org" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">Stellar Docs</a>
             </div>
           </div>
         </div>
