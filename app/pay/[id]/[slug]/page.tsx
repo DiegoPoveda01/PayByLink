@@ -336,7 +336,7 @@ export default function PaymentPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button variant="outline" size="sm" className="w-full border-slate-700 hover:bg-slate-800 text-white">
+                    <Button variant="outline" size="sm" className="w-full border-purple-500/50 bg-purple-500/10 hover:bg-purple-500/20 hover:border-purple-400 text-purple-200 font-medium">
                       Instalar Freighter
                       <ExternalLink className="ml-2 h-4 w-4" />
                     </Button>
