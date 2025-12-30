@@ -8,10 +8,10 @@ const supabase = createClient(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const linkId = params.id;
+    const { id: linkId } = await params;
     const { wallet_address } = await request.json();
 
     if (!linkId || !wallet_address) {
